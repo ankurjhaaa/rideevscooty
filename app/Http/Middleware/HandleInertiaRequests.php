@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Category;
+use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -41,6 +43,20 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'flash' => [
+                'success' => fn () => $request->session()->get('success'),
+                'error' => fn () => $request->session()->get('error'),
+            ],
+            'categories' => fn () => $request->routeIs('admin.*') ? [] : Category::where('is_active', true)
+                ->with(['products' => fn ($query) => $query->where('is_active', true)
+                    ->with([
+                        'images',
+                        'colors' => fn ($colorQuery) => $colorQuery->where('is_active', true)->orderBy('sort_order'),
+                    ])
+                    ->orderBy('sort_order')])
+                ->orderBy('sort_order')
+                ->get(),
+            'siteSettings' => fn () => $request->routeIs('admin.*') ? null : SiteSetting::current(),
         ];
     }
 }
