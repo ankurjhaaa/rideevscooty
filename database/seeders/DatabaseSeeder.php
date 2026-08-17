@@ -212,5 +212,44 @@ class DatabaseSeeder extends Seeder
             'is_featured' => false,
             'is_active' => true,
         ]);
+        // --- SEED IMAGES FOR ALL PRODUCTS ---
+        $sourceImages = [
+            '1_f7e708b398.png',
+            'G_Max_Green_Left2368_3_11zon_6889f5c817.png',
+            'nexus_full_8f9eb2f50f.png',
+        ];
+
+        \Illuminate\Support\Facades\Storage::disk('public')->makeDirectory('products');
+        ProductImage::truncate();
+
+        $allProducts = Product::all();
+        foreach ($allProducts as $product) {
+            // Give every product these 3 images randomly
+            $imagesToUse = $sourceImages;
+            shuffle($imagesToUse);
+
+            foreach ($imagesToUse as $index => $imageName) {
+                $sourcePath = public_path('images/' . $imageName);
+                
+                // Copy to storage to emulate normal upload
+                $uniqueImageName = $product->id . '_' . $index . '_' . $imageName;
+                $destinationPath = 'products/' . $uniqueImageName;
+                
+                if (file_exists($sourcePath)) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->put(
+                        $destinationPath,
+                        file_get_contents($sourcePath)
+                    );
+
+                    ProductImage::create([
+                        'product_id' => $product->id,
+                        'image_path' => $destinationPath,
+                        'type' => $index === 0 ? 'main' : 'side',
+                        'is_primary' => $index === 0,
+                        'sort_order' => $index,
+                    ]);
+                }
+            }
+        }
     }
 }
