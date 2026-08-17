@@ -72,19 +72,7 @@ class DatabaseSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        ProductImage::create([
-            'product_id' => $scooter1->id,
-            'image_path' => 'https://placehold.co/800x600/e3e3e3/333333?text=EV+Sprint+Main',
-            'type' => 'main',
-            'is_primary' => true,
-        ]);
 
-        ProductImage::create([
-            'product_id' => $scooter1->id,
-            'image_path' => 'https://placehold.co/800x600/e3e3e3/333333?text=EV+Sprint+Side',
-            'type' => 'side',
-            'is_primary' => false,
-        ]);
 
         ProductColor::create([
             'product_id' => $scooter1->id,
@@ -116,12 +104,7 @@ class DatabaseSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        ProductImage::create([
-            'product_id' => $scooter2->id,
-            'image_path' => 'https://placehold.co/800x600/e3e3e3/333333?text=EV+Thunder+Main',
-            'type' => 'main',
-            'is_primary' => true,
-        ]);
+
 
         ProductColor::create([
             'product_id' => $scooter2->id,
@@ -151,13 +134,6 @@ class DatabaseSeeder extends Seeder
             'emi_info' => 'Starts at ₹1,500/month',
             'is_featured' => false,
             'is_active' => true,
-        ]);
-
-        ProductImage::create([
-            'product_id' => $scooter3->id,
-            'image_path' => 'https://placehold.co/800x600/e3e3e3/333333?text=EV+EcoLite+Main',
-            'type' => 'main',
-            'is_primary' => true,
         ]);
 
         ProductColor::create([
@@ -218,12 +194,7 @@ class DatabaseSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        ProductImage::create([
-            'product_id' => $scooter5->id,
-            'image_path' => 'https://placehold.co/800x600/e3e3e3/333333?text=EV+CargoPro',
-            'type' => 'main',
-            'is_primary' => true,
-        ]);
+
 
         $scooter6 = Product::create([
             'category_id' => $categoryCity->id,
