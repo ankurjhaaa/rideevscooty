@@ -1,292 +1,509 @@
 import { Head, Link, usePage } from '@inertiajs/react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
 import PublicLayout from '../components/PublicLayout';
 
-function ProductCard({ product }) {
-    const image = product.images?.find((img) => img.is_primary) ?? product.images?.[0];
+// ==========================================
+// ULTRA CLEAN SLIDING HERO CAROUSEL
+// ==========================================
+function HeroCarousel({ products, onScrollDown }) {
+    const [[page, direction], setPage] = useState([0, 0]);
+
+    const imageIndex = Math.abs(page % products.length);
+    const activeProduct = products[imageIndex];
+
+    const paginate = (newDirection) => {
+        setPage([page + newDirection, newDirection]);
+    };
+
+    useEffect(() => {
+        if (!products || products.length <= 1) return;
+        const timer = setInterval(() => paginate(1), 6000);
+        return () => clearInterval(timer);
+    }, [page, products]);
+
+    if (!products || products.length === 0) return null;
+
+    const image = activeProduct?.images?.find(img => img.is_primary) ?? activeProduct?.images?.[0];
+
+    const variants = {
+        enter: (direction) => ({
+            x: direction > 0 ? 200 : -200,
+            opacity: 0,
+            scale: 0.95
+        }),
+        center: {
+            zIndex: 1,
+            x: 0,
+            opacity: 1,
+            scale: 1,
+        },
+        exit: (direction) => ({
+            zIndex: 0,
+            x: direction < 0 ? 200 : -200,
+            opacity: 0,
+            scale: 1.05
+        })
+    };
 
     return (
-        <Link
-            href={`/scooters/${product.slug}`}
-            className="group block overflow-hidden rounded-3xl bg-white shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.1)]"
-        >
-            <div className="relative aspect-[4/3] overflow-hidden bg-slate-50">
-                {/* Subtle gradient overlay on image */}
-                <div className="absolute inset-0 z-10 bg-gradient-to-t from-gray-900/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                
-                {image ? (
-                    <img
-                        src={image.image_url}
-                        alt={product.name}
-                        className="h-full w-full object-cover mix-blend-multiply transition-transform duration-700 ease-out group-hover:scale-105"
-                    />
-                ) : (
-                    <div className="flex h-full w-full flex-col items-center justify-center p-4 text-center">
-                        <svg className="mb-2 h-10 w-10 text-gray-300 transition-transform duration-300 group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        <span className="text-xs font-semibold tracking-wide text-gray-400 uppercase">Coming Soon</span>
-                    </div>
-                )}
-                
-                {/* Badge */}
-                {product.is_featured && (
-                    <div className="absolute top-4 left-4 z-20 rounded-full bg-white/90 px-3 py-1 text-xs font-bold tracking-wider text-emerald-600 shadow-sm backdrop-blur-sm">
-                        Bestseller
-                    </div>
-                )}
-            </div>
+        <section id="hero" className="relative h-[100dvh] w-full flex items-center justify-center overflow-hidden bg-[#fafafa] z-0 pt-16 border-b border-gray-200">
             
-            <div className="p-6 md:p-8">
-                <p className="text-xs font-extrabold tracking-widest text-emerald-600 uppercase">
-                    {product.category?.name}
-                </p>
-                <div className="mt-2 flex items-start justify-between gap-4">
-                    <h3 className="text-xl font-bold tracking-tight text-gray-900 transition-colors group-hover:text-emerald-700">
-                        {product.name}
-                    </h3>
-                    <p className="text-xl font-extrabold text-gray-900 shrink-0">
-                        ₹{Number(product.price).toLocaleString('en-IN')}
-                    </p>
-                </div>
-                {product.short_description && (
-                    <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-gray-500">
-                        {product.short_description}
-                    </p>
-                )}
+            {/* Minimal Grid Background */}
+            <div className="absolute inset-0 z-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#e5e7eb 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+            
+            {/* Ambient Glow */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white rounded-full blur-[120px] z-0" />
+
+            <div className="relative z-10 w-full max-w-7xl mx-auto px-6 h-full flex flex-col justify-center">
                 
-                <div className="mt-6 flex items-center justify-between border-t border-gray-100 pt-6">
-                    <span className="text-sm font-bold text-gray-900 group-hover:text-emerald-600 transition-colors">
-                        View Details
-                    </span>
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-50 text-gray-400 transition-all duration-300 group-hover:bg-emerald-50 group-hover:text-emerald-600">
-                        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                        </svg>
+                <div className="flex flex-col lg:grid lg:grid-cols-12 gap-4 lg:gap-12 items-center h-[85vh] lg:h-[70vh]">
+                    
+                    {/* Left: Typography & Specs */}
+                    <div className="w-full lg:col-span-5 flex flex-col justify-end lg:justify-center h-[40vh] lg:h-full pt-16 lg:pt-0 pb-4 lg:pb-0 z-20">
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={`text-${page}`}
+                                initial={{ opacity: 0, y: 30 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -30 }}
+                                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                                className="w-full"
+                            >
+                                <div className="mb-4 lg:mb-6 flex items-center gap-4">
+                                    <span className="w-8 lg:w-12 h-[1px] bg-black"></span>
+                                    <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-black">
+                                        Featured Model
+                                    </span>
+                                </div>
+                                
+                                {/* Product Name - Truncated to 1 line */}
+                                <h1 className="text-5xl sm:text-6xl lg:text-[5.5rem] font-medium tracking-tight text-black leading-[1.05] mb-4 lg:mb-6 truncate w-full">
+                                    {activeProduct.name}
+                                </h1>
+                                
+                                <p className="text-lg lg:text-xl text-gray-500 font-light mb-6 lg:mb-10 max-w-md">
+                                    Starting at ₹{Number(activeProduct.price).toLocaleString('en-IN')}
+                                </p>
+
+                                <div className="grid grid-cols-2 gap-6 lg:gap-8 mb-8 lg:mb-10 border-t border-gray-200 pt-6 lg:pt-8">
+                                    <div>
+                                        <p className="text-2xl lg:text-3xl font-semibold text-black">{activeProduct.range || '--'}</p>
+                                        <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mt-1 lg:mt-2">Certified Range</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-2xl lg:text-3xl font-semibold text-black">{activeProduct.top_speed || '--'}</p>
+                                        <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mt-1 lg:mt-2">Top Speed</p>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center gap-8">
+                                    <Link
+                                        href={`/scooters/${activeProduct.slug}`}
+                                        className="text-xs font-bold tracking-widest uppercase text-black border-b-2 border-black pb-1 hover:text-gray-500 hover:border-gray-500 transition-colors"
+                                    >
+                                        Explore
+                                    </Link>
+                                    <Link
+                                        href="/book-a-test-ride"
+                                        className="text-xs font-bold tracking-widest uppercase text-gray-500 hover:text-black hover:border-b-2 hover:border-black pb-1 border-b-2 border-transparent transition-all"
+                                    >
+                                        Test Ride
+                                    </Link>
+                                </div>
+                            </motion.div>
+                        </AnimatePresence>
+                    </div>
+
+                    {/* Right: Slider Image */}
+                    <div className="w-full lg:col-span-7 h-[40vh] lg:h-full relative flex items-center justify-center z-10">
+                        <AnimatePresence initial={false} custom={direction}>
+                            <motion.div
+                                key={page}
+                                custom={direction}
+                                variants={variants}
+                                initial="enter"
+                                animate="center"
+                                exit="exit"
+                                transition={{
+                                    x: { type: "spring", stiffness: 300, damping: 30 },
+                                    opacity: { duration: 0.2 },
+                                    scale: { duration: 0.4 }
+                                }}
+                                className="absolute inset-0 flex flex-col items-center justify-center"
+                            >
+                                {image ? (
+                                    <>
+                                        {/* Subtle background text perfectly behind the image */}
+                                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center pointer-events-none z-0">
+                                            <h2 className="text-[20vw] lg:text-[15vw] font-black text-gray-200 whitespace-nowrap select-none opacity-50">
+                                                {activeProduct.name}
+                                            </h2>
+                                        </div>
+                                        {/* Massive image scaling to fill space */}
+                                        <img 
+                                            src={image.image_url} 
+                                            className="w-auto h-full max-h-[100%] max-w-[100%] lg:w-[90%] lg:max-w-[800px] object-contain mix-blend-multiply relative z-10" 
+                                            alt={activeProduct.name} 
+                                        />
+                                    </>
+                                ) : (
+                                    <span className="text-gray-400 uppercase tracking-widest text-sm border border-gray-200 rounded-full px-6 py-3">No Image</span>
+                                )}
+                            </motion.div>
+                        </AnimatePresence>
                     </div>
                 </div>
+
             </div>
-        </Link>
+
+            {/* Pagination Controls */}
+            {products.length > 1 && (
+                <div className="absolute bottom-6 lg:bottom-12 right-6 lg:right-12 z-20 flex items-center gap-4 lg:gap-8">
+                    <div className="flex items-center gap-3">
+                        <span className="text-xs lg:text-sm font-semibold text-black">
+                            {String(imageIndex + 1).padStart(2, '0')}
+                        </span>
+                        <div className="w-16 lg:w-24 h-[2px] bg-gray-200 relative overflow-hidden">
+                            <motion.div 
+                                key={`progress-${page}`}
+                                initial={{ x: '-100%' }}
+                                animate={{ x: '0%' }}
+                                transition={{ duration: 6, ease: "linear" }}
+                                className="absolute inset-0 bg-black"
+                            />
+                        </div>
+                        <span className="text-xs lg:text-sm font-semibold text-gray-400">
+                            {String(products.length).padStart(2, '0')}
+                        </span>
+                    </div>
+
+                    <div className="flex gap-2">
+                        <button 
+                            onClick={() => paginate(-1)}
+                            className="w-10 h-10 lg:w-12 lg:h-12 rounded-full border border-gray-200 flex items-center justify-center text-black hover:bg-black hover:text-white transition-colors bg-white"
+                            aria-label="Previous Slide"
+                        >
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                            </svg>
+                        </button>
+                        <button 
+                            onClick={() => paginate(1)}
+                            className="w-10 h-10 lg:w-12 lg:h-12 rounded-full border border-gray-200 flex items-center justify-center text-black hover:bg-black hover:text-white transition-colors bg-white"
+                            aria-label="Next Slide"
+                        >
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            )}
+        </section>
     );
 }
 
-export default function Home({ featuredProducts }) {
-    const { props } = usePage();
-    const categories = props.categories ?? [];
+// ==========================================
+// Full Screen Product Section Component (Sticky Wipe, Alternating Layout)
+// ==========================================
+function FullScreenProduct({ product, index, setActiveIndex, isFirst }) {
+    const image = product.images?.find((img) => img.is_primary) ?? product.images?.[0];
+    
+    // Completely flat background colors
+    const bgColors = ['bg-white', 'bg-[#fafafa]', 'bg-[#f5f5f5]'];
+    const bgColor = bgColors[index % bgColors.length];
 
-    const heroProduct = featuredProducts[0];
-    const heroImage = heroProduct?.images?.find((img) => img.is_primary) ?? heroProduct?.images?.[0];
+    // Hero section has image on the Right.
+    // To create a perfect Zig-Zag, the first product (index 0) should have the Image on the LEFT.
+    const isImageLeft = index % 2 === 0;
+
+    const wrapperRef = useRef(null);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setActiveIndex(index);
+                }
+            },
+            { threshold: 0.4 }
+        );
+        if (wrapperRef.current) {
+            observer.observe(wrapperRef.current);
+        }
+        return () => observer.disconnect();
+    }, [index, setActiveIndex]);
+
+    return (
+        <div
+            id={isFirst ? 'scooters' : `product-${index}`}
+            ref={wrapperRef}
+            className="h-[120vh] relative w-full"
+        >
+            <div className={`h-[100dvh] w-full sticky top-0 flex flex-col items-center justify-center overflow-hidden ${bgColor} border-t border-gray-200`}>
+
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: false, amount: 0.5 }}
+                    transition={{ duration: 1.5, ease: "easeOut" }}
+                    className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden"
+                >
+                    <h2 className="text-[25vw] md:text-[20vw] font-bold text-black/[0.03] whitespace-nowrap tracking-tighter uppercase select-none px-10">
+                        {product.name}
+                    </h2>
+                </motion.div>
+
+                <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-8 flex flex-col lg:grid lg:grid-cols-2 h-[85vh] lg:h-full gap-4 lg:gap-16 pt-10 lg:pt-0">
+
+                    {/* Text Section: Alternates left/right on desktop */}
+                    <div className={`w-full flex flex-col justify-end lg:justify-center h-[40vh] lg:h-full pt-16 lg:pt-0 z-20 ${isImageLeft ? 'lg:order-2 lg:pl-12' : 'lg:order-1 lg:pr-12'}`}>
+                        <motion.div
+                            initial={{ opacity: 0, x: isImageLeft ? 30 : -30 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: false, amount: 0.3 }}
+                            transition={{ duration: 0.8 }}
+                            className="w-full"
+                        >
+                            {/* Product Name - Truncated to 1 line */}
+                            <h3 className="text-5xl sm:text-6xl md:text-6xl xl:text-7xl font-medium text-black mb-4 lg:mb-6 leading-[1.05] tracking-tight truncate w-full">
+                                {product.name}
+                            </h3>
+
+                            <p className="text-lg lg:text-xl text-gray-500 font-light mb-6 lg:mb-10 max-w-md">
+                                Starting at ₹{Number(product.price).toLocaleString('en-IN')}
+                            </p>
+
+                            <div className="grid grid-cols-2 gap-6 lg:gap-8 mb-6 lg:mb-10 border-t border-gray-200 pt-6 lg:pt-8">
+                                <div>
+                                    <p className="text-2xl lg:text-3xl font-semibold text-black">{product.range || '--'}</p>
+                                    <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mt-1 lg:mt-2">Estimated Range</p>
+                                </div>
+                                <div>
+                                    <p className="text-2xl lg:text-3xl font-semibold text-black">{product.top_speed || '--'}</p>
+                                    <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mt-1 lg:mt-2">Top Speed</p>
+                                </div>
+                            </div>
+
+                            <Link
+                                href={`/scooters/${product.slug}`}
+                                className="inline-flex items-center gap-3 text-xs font-bold tracking-[0.15em] uppercase text-black border-b-2 border-black pb-1 hover:text-gray-500 hover:border-gray-500 transition-colors"
+                            >
+                                Explore Vehicle
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                                </svg>
+                            </Link>
+                        </motion.div>
+                    </div>
+
+                    {/* Image Reveal Section: Alternates left/right on desktop */}
+                    <div className={`w-full flex items-start lg:items-center justify-center h-[40vh] lg:h-full relative z-10 ${isImageLeft ? 'lg:order-1' : 'lg:order-2'}`}>
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9, x: isImageLeft ? -30 : 30 }}
+                            whileInView={{ opacity: 1, scale: 1, x: 0 }}
+                            viewport={{ once: false, amount: 0.3 }}
+                            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                            className="w-full h-full flex flex-col items-center justify-center relative"
+                        >
+                            {image ? (
+                                <img
+                                    src={image.image_url}
+                                    alt={product.name}
+                                    className="w-auto h-full max-h-[100%] max-w-[100%] lg:w-[90%] lg:max-h-[60vh] object-contain relative z-10 mix-blend-multiply drop-shadow-none"
+                                />
+                            ) : (
+                                <span className="text-gray-300 font-light tracking-widest uppercase flex h-full items-center justify-center relative z-10">Render Pending</span>
+                            )}
+                        </motion.div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    );
+}
+
+// ==========================================
+// Spinning EV Badge Component
+// ==========================================
+function EVBadge() {
+    return (
+        <div className="fixed bottom-10 left-10 z-50 hidden lg:flex items-center justify-center w-32 h-32 pointer-events-none mix-blend-difference">
+            <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                className="absolute inset-0 flex items-center justify-center text-white"
+            >
+                <svg viewBox="0 0 100 100" className="w-full h-full overflow-visible">
+                    <defs>
+                        <path id="circle" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" />
+                    </defs>
+                    <text fontSize="11.5" fontWeight="bold" letterSpacing="2.5" fill="currentColor">
+                        <textPath href="#circle">
+                            100% ELECTRIC • ZERO EMISSIONS •
+                        </textPath>
+                    </text>
+                </svg>
+            </motion.div>
+            <div className="w-2 h-2 bg-white rounded-full" />
+        </div>
+    );
+}
+
+// ==========================================
+// Home Component
+// ==========================================
+export default function Home({ heroProducts, products }) {
+    const { props } = usePage();
+    const [activeProductIndex, setActiveProductIndex] = useState(-1);
+
+    const displayHeroProducts = heroProducts?.length > 0 ? heroProducts : products;
+    const displayProducts = products?.length > 0 ? products : [];
+
+    const scrollToSection = (index) => {
+        let targetId = '';
+        if (index === -1) targetId = 'hero';
+        else if (index >= 0 && index < displayProducts.length) {
+            targetId = index === 0 ? 'scooters' : `product-${index}`;
+        } else if (index === displayProducts.length) {
+            targetId = 'features';
+        }
+        
+        if (targetId) {
+            const element = document.getElementById(targetId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    };
+
+    // Observer for Hero Section
+    const heroRef = useRef(null);
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setActiveProductIndex(-1);
+                }
+            },
+            { threshold: 0.5 }
+        );
+        if (heroRef.current) observer.observe(heroRef.current);
+        return () => observer.disconnect();
+    }, []);
+
+    // Observer for Features Section
+    const featuresRef = useRef(null);
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setActiveProductIndex(displayProducts.length);
+                }
+            },
+            { threshold: 0.2 }
+        );
+        if (featuresRef.current) observer.observe(featuresRef.current);
+        return () => observer.disconnect();
+    }, [displayProducts.length]);
+
+    // Check if we are currently viewing the product sticky wipes
+    const isViewingProducts = activeProductIndex >= 0 && activeProductIndex < displayProducts.length;
 
     return (
         <PublicLayout>
-            <Head title="RideEV — Premium Electric Scooters" />
+            <Head title="RideEV — The Future is Electric" />
 
-            {/* Hero */}
-            <section className="relative overflow-hidden bg-slate-50 pt-8 pb-20 lg:pt-16 lg:pb-28">
-                {/* Background decorative elements */}
-                <div className="absolute inset-0 z-0">
-                    <div className="absolute -top-[30%] -right-[10%] h-[1000px] w-[1000px] rounded-full bg-gradient-to-br from-emerald-100/40 to-teal-50/20 blur-3xl" />
-                    <div className="absolute -bottom-[20%] -left-[10%] h-[600px] w-[600px] rounded-full bg-gradient-to-tr from-cyan-50/40 to-emerald-50/20 blur-3xl" />
-                </div>
-                
-                <div className="relative z-10 mx-auto grid max-w-6xl items-center gap-16 px-4 sm:px-6 lg:grid-cols-2">
-                    <div className="max-w-2xl">
-                        <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50/50 px-4 py-1.5 text-xs font-bold tracking-wide text-emerald-700 uppercase">
-                            <span className="flex h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
-                            Power your every ride
-                        </div>
-                        <h1 className="mt-8 text-5xl leading-[1.05] font-extrabold tracking-tight text-gray-900 sm:text-6xl lg:text-[4rem]">
-                            Electric <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500">scooters</span> built for the modern rider.
-                        </h1>
-                        <p className="mt-6 max-w-lg text-lg leading-relaxed text-gray-600">
-                            Experience the perfect blend of power, range, and design. Zero emissions, zero noise, 100% thrill.
-                        </p>
-                        <div className="mt-10 flex flex-wrap items-center gap-4">
-                            <a
-                                href="#scooters"
-                                className="group relative inline-flex items-center justify-center overflow-hidden rounded-full bg-gray-900 px-8 py-4 text-sm font-bold tracking-wide text-white transition-all hover:bg-gray-800 hover:shadow-xl"
-                            >
-                                <span className="relative z-10 flex items-center gap-2">
-                                    Explore Lineup
-                                    <svg className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                    </svg>
-                                </span>
-                            </a>
-                            <Link
-                                href="/book-a-test-ride"
-                                className="inline-flex items-center justify-center rounded-full border-2 border-gray-200 bg-transparent px-8 py-3.5 text-sm font-bold tracking-wide text-gray-900 transition-colors hover:border-emerald-500 hover:text-emerald-700 hover:bg-emerald-50"
-                            >
-                                Book Test Ride
-                            </Link>
-                        </div>
-                        
-                        {/* Trust indicators */}
-                        <div className="mt-12 flex items-center gap-8 border-t border-gray-200/60 pt-8">
-                            <div>
-                                <p className="text-3xl font-extrabold text-gray-900">10k+</p>
-                                <p className="text-sm font-medium text-gray-500">Happy Riders</p>
-                            </div>
-                            <div className="h-10 w-px bg-gray-200" />
-                            <div>
-                                <p className="text-3xl font-extrabold text-gray-900">5yr</p>
-                                <p className="text-sm font-medium text-gray-500">Battery Warranty</p>
-                            </div>
-                        </div>
-                    </div>
+            <EVBadge />
 
-                    <div className="relative mx-auto w-full max-w-lg lg:max-w-none">
-                        {heroImage ? (
-                            <div className="relative">
-                                {/* Decorative circle behind scooter */}
-                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[110%] w-[110%] rounded-full bg-gradient-to-tr from-emerald-100 to-transparent blur-2xl opacity-60" />
-                                <img
-                                    src={heroImage.image_url}
-                                    alt={heroProduct.name}
-                                    className="relative z-10 w-full object-contain drop-shadow-[0_30px_30px_rgba(0,0,0,0.15)] animate-[float_6s_ease-in-out_infinite]"
-                                    style={{ animation: 'float 6s ease-in-out infinite' }}
-                                />
-                                <style>{`
-                                    @keyframes float {
-                                        0% { transform: translateY(0px); }
-                                        50% { transform: translateY(-15px); }
-                                        100% { transform: translateY(0px); }
-                                    }
-                                `}</style>
-                            </div>
-                        ) : (
-                            <div className="mx-auto flex aspect-square w-full max-w-md flex-col items-center justify-center rounded-[3rem] border-2 border-dashed border-gray-200 bg-white/50 backdrop-blur-sm">
-                                <svg className="mb-4 h-16 w-16 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                                <span className="text-sm font-bold text-gray-400 uppercase tracking-widest">Scooter Image Pending</span>
-                            </div>
-                        )}
-                    </div>
-                </div>
-            </section>
-
-            {/* Featured products */}
-            {featuredProducts.length > 0 && (
-                <section className="relative z-20 -mt-8 px-4 sm:px-6">
-                    <div className="mx-auto max-w-6xl">
-                        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-                            {featuredProducts.map((product) => (
-                                <ProductCard key={product.id} product={product} />
-                            ))}
-                        </div>
-                    </div>
-                </section>
-            )}
-
-            {/* Browse by category */}
-            <section id="scooters" className="mx-auto max-w-6xl px-4 py-24 sm:px-6">
-                <div className="text-center max-w-2xl mx-auto mb-16">
-                    <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">Find your perfect match</h2>
-                    <p className="mt-4 text-lg text-gray-500">
-                        Whether you need a daily city commuter or a heavy-duty delivery partner, we have an EV for you.
-                    </p>
-                </div>
-
-                <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-                    {categories.map((category) => (
-                        <div
-                            key={category.id}
-                            className="group relative overflow-hidden rounded-3xl bg-white p-8 shadow-sm ring-1 ring-gray-100 transition-all duration-300 hover:shadow-xl hover:ring-emerald-100"
+            {/* Floating Right Navigation (Up/Down Arrows) - Only visible on Products section */}
+            <AnimatePresence>
+                {isViewingProducts && displayProducts.length > 1 && (
+                    <motion.div 
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 20 }}
+                        className="fixed right-4 lg:right-12 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-3"
+                    >
+                        <button
+                            onClick={() => scrollToSection(activeProductIndex - 1)}
+                            className="w-10 h-10 lg:w-12 lg:h-12 border border-black rounded-full flex items-center justify-center bg-white text-black hover:bg-black hover:text-white transition-colors"
+                            aria-label="Previous Product"
                         >
-                            {/* Decorative accent */}
-                            <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-emerald-50 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-                            
-                            <div className="relative z-10">
-                                <h3 className="text-2xl font-bold text-gray-900 group-hover:text-emerald-700 transition-colors">
-                                    {category.name}
-                                </h3>
-                                {category.description && (
-                                    <p className="mt-3 text-sm leading-relaxed text-gray-500">
-                                        {category.description}
-                                    </p>
-                                )}
+                            <svg className="w-4 h-4 lg:w-5 lg:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
+                            </svg>
+                        </button>
+                        <button
+                            onClick={() => scrollToSection(activeProductIndex + 1)}
+                            className="w-10 h-10 lg:w-12 lg:h-12 border border-black rounded-full flex items-center justify-center bg-white text-black hover:bg-black hover:text-white transition-colors"
+                            aria-label="Next Product"
+                        >
+                            <svg className="w-4 h-4 lg:w-5 lg:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                            </svg>
+                        </button>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
-                                <div className="mt-8 border-t border-gray-100 pt-6">
-                                    {category.products.length === 0 ? (
-                                        <p className="text-sm font-medium italic text-gray-400">Models coming soon.</p>
-                                    ) : (
-                                        <ul className="space-y-4">
-                                            {category.products.map((product) => (
-                                                <li key={product.id}>
-                                                    <Link
-                                                        href={`/scooters/${product.slug}`}
-                                                        className="group/link flex items-center justify-between font-bold text-gray-700 transition-colors hover:text-emerald-600"
-                                                    >
-                                                        {product.name}
-                                                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-50 text-gray-400 transition-all group-hover/link:bg-emerald-50 group-hover/link:text-emerald-600">
-                                                            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                                            </svg>
-                                                        </span>
-                                                    </Link>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </section>
+            {/* NEW: ULTRA CLEAN SLIDING HERO CAROUSEL */}
+            <div ref={heroRef}>
+                <HeroCarousel products={displayHeroProducts} onScrollDown={() => scrollToSection(0)} />
+            </div>
 
-            {/* Why RideEV */}
-            <section className="bg-white py-24 border-t border-gray-100">
-                <div className="mx-auto max-w-6xl px-4 sm:px-6">
-                    <div className="text-center max-w-2xl mx-auto mb-16">
-                        <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">Why choose RideEV?</h2>
-                        <p className="mt-4 text-lg text-gray-500">
-                            We're rethinking urban mobility from the ground up to bring you the best riding experience.
-                        </p>
-                    </div>
+            {/* FULL SCREEN STICKY WIPE (Deep Dive, Alternating Layout) */}
+            <div className="relative z-10 bg-white">
+                {displayProducts?.map((product, idx) => (
+                    <FullScreenProduct
+                        key={`full-${product.id}`}
+                        product={product}
+                        index={idx}
+                        setActiveIndex={setActiveProductIndex}
+                        isFirst={idx === 0}
+                    />
+                ))}
+            </div>
 
-                    <div className="grid gap-8 sm:grid-cols-3">
+            {/* ELEGANT FEATURES SHOWCASE */}
+            <section id="features" ref={featuresRef} className="py-24 lg:py-48 bg-white z-20 relative border-t border-gray-200">
+                <div className="max-w-7xl mx-auto px-6 lg:px-8">
+                    <motion.div
+                        initial={{ opacity: 0, y: 50 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-100px" }}
+                        transition={{ duration: 1 }}
+                        className="mb-16 lg:mb-32 text-center"
+                    >
+                        <h2 className="text-4xl lg:text-6xl font-medium tracking-tight text-black">A New Era of Mobility.</h2>
+                        <p className="text-lg lg:text-xl text-gray-500 mt-4 lg:mt-6 max-w-2xl mx-auto font-light">Engineered to outperform, designed to turn heads.</p>
+                    </motion.div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-16">
                         {[
-                            { 
-                                title: 'Zero Emissions', 
-                                desc: 'Ride clean with 100% electric power, no fuel needed. Better for you, better for the planet.',
-                                icon: (
-                                    <svg className="h-7 w-7 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                )
-                            },
-                            { 
-                                title: 'Long Range', 
-                                desc: 'Go further on a single charge with high-capacity smart batteries that eliminate range anxiety.',
-                                icon: (
-                                    <svg className="h-7 w-7 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                    </svg>
-                                )
-                            },
-                            { 
-                                title: 'Low Running Cost', 
-                                desc: 'Save thousands on fuel and maintenance every single year compared to petrol scooters.',
-                                icon: (
-                                    <svg className="h-7 w-7 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                )
-                            },
-                        ].map((item) => (
-                            <div
-                                key={item.title}
-                                className="rounded-3xl border border-gray-100 bg-gray-50/50 p-8 shadow-sm transition-all hover:-translate-y-1 hover:shadow-md hover:bg-white"
+                            { title: 'Intelligent Range', desc: 'Advanced battery management ensuring you reach your destination with confidence.' },
+                            { title: 'Aerospace Materials', desc: 'Ultra-lightweight frame crafted from high-grade aluminum for ultimate agility.' },
+                            { title: 'Connected Ride', desc: 'Seamlessly sync with your smartphone for navigation, diagnostics, and security.' },
+                        ].map((feature, idx) => (
+                            <motion.div
+                                key={idx}
+                                initial={{ opacity: 0, y: 50 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true, margin: "-50px" }}
+                                transition={{ duration: 0.8, delay: idx * 0.2, ease: [0.16, 1, 0.3, 1] }}
+                                className="group relative"
                             >
-                                <div className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50">
-                                    {item.icon}
+                                <div className="absolute inset-0 bg-[#fafafa] rounded-3xl transform scale-y-0 origin-bottom group-hover:scale-y-100 transition-transform duration-500 ease-in-out -z-10" />
+                                <div className="p-8 lg:p-10">
+                                    <div className="w-14 h-14 lg:w-16 lg:h-16 rounded-full border border-gray-200 flex items-center justify-center text-sm font-semibold mb-6 lg:mb-10 group-hover:bg-black group-hover:text-white transition-colors duration-500">
+                                        0{idx + 1}
+                                    </div>
+                                    <h3 className="text-xl lg:text-3xl font-medium text-black mb-3 lg:mb-6">{feature.title}</h3>
+                                    <p className="text-gray-500 leading-relaxed font-light text-base lg:text-lg">{feature.desc}</p>
                                 </div>
-                                <h3 className="text-xl font-bold text-gray-900">
-                                    {item.title}
-                                </h3>
-                                <p className="mt-4 text-sm leading-relaxed text-gray-500">{item.desc}</p>
-                            </div>
+                            </motion.div>
                         ))}
                     </div>
                 </div>
