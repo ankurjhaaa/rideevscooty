@@ -33,16 +33,3 @@
     background-color: #a3a29e;
 }
 
-@media (prefers-color-scheme: dark) {
-    .thin-scrollbar {
-        scrollbar-color: #3e3e3a transparent;
-    }
-
-    .thin-scrollbar::-webkit-scrollbar-thumb {
-        background-color: #3e3e3a;
-    }
-
-    .thin-scrollbar::-webkit-scrollbar-thumb:hover {
-        background-color: #5a5954;
-    }
-}
