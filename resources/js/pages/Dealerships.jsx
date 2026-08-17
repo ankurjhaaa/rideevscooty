@@ -1,71 +1,94 @@
 import { Head } from '@inertiajs/react';
+import { motion } from 'framer-motion';
 import PublicLayout from '../components/PublicLayout';
 
 export default function Dealerships() {
     const dealers = [
-        { city: 'MUMBAI', name: 'RIDEEV WEST', address: '123 LINK ROAD, ANDHERI WEST, MUMBAI 400053', phone: '022-12345678' },
-        { city: 'DELHI', name: 'RIDEEV NORTH', address: '45 CONNAUGHT PLACE, NEW DELHI 110001', phone: '011-87654321' },
-        { city: 'BENGALURU', name: 'RIDEEV SOUTH', address: '78 INDIRANAGAR 100FT ROAD, BENGALURU 560038', phone: '080-11223344' },
-        { city: 'PUNE', name: 'RIDEEV DECCAN', address: '12 KOREGAON PARK, PUNE 411001', phone: '020-99887766' },
-        { city: 'HYDERABAD', name: 'RIDEEV DECCAN PRO', address: '55 JUBILEE HILLS, HYDERABAD 500033', phone: '040-55443322' },
-        { city: 'CHENNAI', name: 'RIDEEV COAST', address: '89 ECR ROAD, THIRUVANMIYUR, CHENNAI 600041', phone: '044-66778899' },
+        { city: 'Mumbai', name: 'RideEV West', address: '123 Link Road, Andheri West, Mumbai 400053', phone: '022-12345678' },
+        { city: 'Delhi', name: 'RideEV North', address: '45 Connaught Place, New Delhi 110001', phone: '011-87654321' },
+        { city: 'Bengaluru', name: 'RideEV South', address: '78 Indiranagar 100ft Road, Bengaluru 560038', phone: '080-11223344' },
+        { city: 'Pune', name: 'RideEV Deccan', address: '12 Koregaon Park, Pune 411001', phone: '020-99887766' },
+        { city: 'Hyderabad', name: 'RideEV Deccan Pro', address: '55 Jubilee Hills, Hyderabad 500033', phone: '040-55443322' },
+        { city: 'Chennai', name: 'RideEV Coast', address: '89 ECR Road, Thiruvanmiyur, Chennai 600041', phone: '044-66778899' },
     ];
 
     return (
         <PublicLayout>
             <Head title="Dealerships | RideEV" />
 
-            <div className="bg-black text-white px-6 py-24 lg:px-12 border-b-[12px] border-black">
-                <div className="max-w-[1400px] mx-auto">
-                    <h1 className="text-6xl lg:text-8xl font-black tracking-tighter uppercase mb-8">
-                        FIND A DEALER
+            {/* Clean Hero Header */}
+            <div className="bg-[#fafafa] pt-32 pb-16 lg:pt-48 lg:pb-24 border-b border-gray-100 text-center">
+                <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    className="max-w-3xl mx-auto px-6"
+                >
+                    <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-gray-400 mb-6">Our Locations</p>
+                    <h1 className="text-5xl lg:text-7xl font-medium tracking-tight text-black mb-6">
+                        Find a Dealer.
                     </h1>
-                    <p className="text-2xl font-bold uppercase tracking-widest opacity-80 max-w-3xl">
-                        VISIT OUR EXPERIENCE CENTERS TO FEEL THE MACHINES IN PERSON.
+                    <p className="text-lg lg:text-xl font-light text-gray-500">
+                        Visit our experience centers to feel the machines in person.
                     </p>
-                </div>
+                </motion.div>
             </div>
 
-            <div className="max-w-[1400px] mx-auto px-6 lg:px-12 py-32">
+            <div className="max-w-7xl mx-auto px-6 lg:px-8 py-24 lg:py-32 bg-white">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {dealers.map((dealer) => (
-                        <div key={dealer.name} className="border-[6px] border-black p-8 hover:bg-black hover:text-white transition-none group flex flex-col h-full">
-                            <div className="border-b-[4px] border-black group-hover:border-white pb-4 mb-6">
-                                <p className="text-lg font-black tracking-widest uppercase mb-2">{dealer.city}</p>
-                                <p className="text-3xl font-black tracking-tighter uppercase">{dealer.name}</p>
+                    {dealers.map((dealer, idx) => (
+                        <motion.div 
+                            key={dealer.name} 
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.5, delay: idx * 0.1 }}
+                            className="bg-[#fafafa] border border-gray-100 rounded-[2rem] p-10 flex flex-col h-full hover:shadow-lg hover:border-gray-200 transition-all duration-300"
+                        >
+                            <div className="mb-8">
+                                <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-gray-400 mb-3">{dealer.city}</p>
+                                <p className="text-2xl font-medium tracking-tight text-black">{dealer.name}</p>
                             </div>
                             
-                            <p className="text-lg font-bold uppercase leading-relaxed mb-8 flex-grow">
+                            <p className="text-base font-light text-gray-500 leading-relaxed mb-10 flex-grow">
                                 {dealer.address}
                             </p>
                             
-                            <div className="mt-auto">
-                                <p className="text-sm font-black tracking-widest uppercase opacity-60 mb-2">CALL</p>
-                                <a href={`tel:${dealer.phone}`} className="text-2xl font-black uppercase hover:underline">
+                            <div className="mt-auto border-t border-gray-200 pt-8">
+                                <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-gray-400 mb-2">Call</p>
+                                <a href={`tel:${dealer.phone}`} className="text-lg font-medium text-black hover:text-gray-500 transition-colors inline-block mb-6">
                                     {dealer.phone}
                                 </a>
-                            </div>
-                            
-                            <div className="mt-8 pt-6 border-t-[4px] border-black group-hover:border-white">
-                                <button className="w-full bg-black text-white group-hover:bg-white group-hover:text-black py-4 text-sm font-black tracking-widest uppercase transition-none">
-                                    GET DIRECTIONS
+                                <button className="w-full bg-white border border-gray-200 text-black hover:bg-black hover:text-white hover:border-black py-4 rounded-full text-xs font-bold tracking-widest uppercase transition-colors">
+                                    Get Directions
                                 </button>
                             </div>
-                        </div>
+                        </motion.div>
                     ))}
                 </div>
                 
-                <div className="mt-32 border-[6px] border-black bg-black text-white p-16 text-center">
-                    <h2 className="text-4xl lg:text-6xl font-black tracking-tighter uppercase mb-6">
-                        WANT TO PARTNER WITH US?
-                    </h2>
-                    <p className="text-xl font-bold uppercase mb-12">
-                        WE ARE EXPANDING RAPIDLY. BECOME A RIDEEV DEALER TODAY.
-                    </p>
-                    <button className="bg-white text-black px-12 py-6 text-xl font-black tracking-widest uppercase hover:bg-transparent hover:text-white border-[6px] border-white transition-none">
-                        APPLY FOR DEALERSHIP
-                    </button>
-                </div>
+                {/* Partner CTA */}
+                <motion.div 
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6 }}
+                    className="mt-32 bg-black text-white rounded-[2.5rem] p-16 lg:p-24 text-center overflow-hidden relative"
+                >
+                    <div className="absolute inset-0 z-0 opacity-20 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#ffffff 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+                    <div className="relative z-10">
+                        <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-gray-400 mb-6">Partnership</p>
+                        <h2 className="text-4xl lg:text-5xl font-medium tracking-tight mb-6">
+                            Want to partner with us?
+                        </h2>
+                        <p className="text-lg lg:text-xl font-light text-gray-400 mb-12 max-w-2xl mx-auto">
+                            We are expanding rapidly across the nation. Join the electric revolution and become a RideEV dealer today.
+                        </p>
+                        <button className="bg-white text-black px-10 py-5 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-gray-200 transition-colors">
+                            Apply for Dealership
+                        </button>
+                    </div>
+                </motion.div>
             </div>
         </PublicLayout>
     );
