@@ -10,4 +10,8 @@ Route::get('/scooters/{product}', [ScooterController::class, 'show'])->name('sco
 Route::get('/book-a-test-ride', [TestRideController::class, 'create'])->name('test-ride.create');
 Route::post('/book-a-test-ride', [TestRideController::class, 'store'])->name('test-ride.store');
 
+Route::inertia('/about', 'About')->name('about');
+Route::inertia('/dealerships', 'Dealerships')->name('dealerships');
+Route::inertia('/contact', 'Contact')->name('contact');
+
 require __DIR__.'/admin.php';
