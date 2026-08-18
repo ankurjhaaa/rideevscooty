@@ -19,7 +19,7 @@ function CloseIcon(props) {
     );
 }
 
-export default function PublicLayout({ children }) {
+export default function PublicLayout({ children, hideToaster = false }) {
     const { props } = usePage();
     const categories = props.categories ?? [];
     const settings = props.siteSettings ?? {};
@@ -322,7 +322,7 @@ export default function PublicLayout({ children }) {
 
             {/* Main Content Area */}
             <main className="flex-1 relative">
-                {(props.flash?.success || props.flash?.error) && (
+                {!hideToaster && (props.flash?.success || props.flash?.error) && (
                     <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-4 max-w-sm">
                         <FlashMessage message={props.flash?.success} type="success" />
                         <FlashMessage message={props.flash?.error} type="error" />
