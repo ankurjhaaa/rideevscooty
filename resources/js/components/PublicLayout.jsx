@@ -26,6 +26,7 @@ export default function PublicLayout({ children, hideToaster = false }) {
     
     const [mobileOpen, setMobileOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const [expandedCategory, setExpandedCategory] = useState(null); // Mobile accordion state
     
     // Mega Menu States
     const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
@@ -93,15 +94,38 @@ export default function PublicLayout({ children, hideToaster = false }) {
                         : 'bg-transparent text-zinc-50 py-6'
                 }`}
             >
-                <div className="max-w-7xl mx-auto px-6 lg:px-8 flex items-center justify-between">
+                <div className="max-w-7xl mx-auto px-6 lg:px-8 flex items-center justify-between h-full relative">
                     
-                    {/* Logo */}
-                    <Link href="/" className="relative z-50 flex items-center">
-                        <img src="logo.png" alt="RideEV Logo" className="h-8 lg:h-10 w-auto" />
-                    </Link>
+                    {/* Mobile Left: Menu Toggle */}
+                    <div className="flex-1 lg:hidden">
+                        <button
+                            type="button"
+                            onClick={() => setMobileOpen(true)}
+                            className="relative z-50 p-2 -ml-2 transition-colors text-zinc-50"
+                        >
+                            <MenuIcon className="h-6 w-6" />
+                        </button>
+                    </div>
 
-                    {/* Desktop Navigation */}
-                    <nav className="hidden lg:flex items-center gap-10 h-full">
+                    {/* Logo (Centered on Mobile, Left on Desktop) */}
+                    <div className="flex-1 lg:flex-none flex justify-center lg:justify-start z-50">
+                        <Link href="/" className="flex items-center">
+                            <img src="/logo.png" alt="RideEV Logo" className="h-6 lg:h-8 w-auto" />
+                        </Link>
+                    </div>
+
+                    {/* Mobile Right: Book Link */}
+                    <div className="flex-1 lg:hidden flex justify-end z-50">
+                        <Link
+                            href="/book-a-test-ride"
+                            className="text-[10px] font-bold tracking-widest uppercase text-white hover:text-zinc-400 transition-colors"
+                        >
+                            Book
+                        </Link>
+                    </div>
+
+                    {/* Desktop Navigation (Absolute Center) */}
+                    <nav className="hidden lg:flex items-center justify-center gap-10 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-full">
                         
                         {/* Scooters Mega Menu */}
                         <div 
@@ -238,7 +262,7 @@ export default function PublicLayout({ children, hideToaster = false }) {
                         ))}
                     </nav>
 
-                    <div className="hidden lg:flex items-center">
+                    <div className="hidden lg:flex flex-1 justify-end items-center z-50">
                         <Link
                             href="/book-a-test-ride"
                             className={`rounded-full px-8 py-3 text-xs font-bold tracking-widest uppercase transition-all duration-300 border border-zinc-50 hover:bg-zinc-50 hover:text-zinc-950 text-zinc-50 bg-transparent`}
@@ -246,75 +270,161 @@ export default function PublicLayout({ children, hideToaster = false }) {
                             Test Ride
                         </Link>
                     </div>
-
-                    {/* Mobile Menu Toggle */}
-                    <button
-                        type="button"
-                        onClick={() => setMobileOpen(!mobileOpen)}
-                        className={`lg:hidden relative z-50 p-2 -mr-2 transition-colors text-zinc-50`}
-                    >
-                        {mobileOpen ? <CloseIcon className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
-                    </button>
                 </div>
             </header>
 
-            {/* Elegant Mobile Menu Overlay with Framer Motion */}
+            {/* Elegant Mobile Menu Drawer with Framer Motion */}
             <AnimatePresence>
                 {mobileOpen && (
-                    <motion.div 
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                        className="fixed inset-0 z-40 bg-zinc-950/95 backdrop-blur-2xl flex flex-col pt-32 px-6 pb-12"
-                    >
-                        <nav className="flex flex-col gap-6 mt-8">
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                            >
-                                <Link
-                                    href="/#scooters"
-                                    onClick={() => setMobileOpen(false)}
-                                    className="text-4xl font-semibold tracking-tight text-white"
-                                >
-                                    Scooters
-                                </Link>
-                            </motion.div>
-                            {navLinks.map((link, i) => (
-                                <motion.div
-                                    key={link.name}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.1 + (i + 1) * 0.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                                >
-                                    <Link
-                                        href={link.href}
-                                        onClick={() => setMobileOpen(false)}
-                                        className="text-4xl font-semibold tracking-tight text-white"
-                                    >
-                                        {link.name}
-                                    </Link>
-                                </motion.div>
-                            ))}
-                        </nav>
+                    <>
+                        {/* Backdrop */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm lg:hidden"
+                            onClick={() => setMobileOpen(false)}
+                        />
 
+                        {/* Sidebar Drawer */}
                         <motion.div 
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.5, duration: 0.5 }}
-                            className="mt-auto"
+                            initial={{ x: "-100%" }}
+                            animate={{ x: 0 }}
+                            exit={{ x: "-100%" }}
+                            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                            className="fixed inset-y-0 left-0 z-[70] w-[85vw] max-w-sm bg-zinc-950/95 backdrop-blur-2xl border-r border-zinc-800 flex flex-col shadow-2xl lg:hidden overflow-y-auto thin-scrollbar will-change-transform"
                         >
-                            <Link
-                                href="/book-a-test-ride"
-                                onClick={() => setMobileOpen(false)}
-                                className="block w-full rounded-2xl bg-white px-6 py-4 text-center text-sm font-semibold tracking-widest uppercase text-black hover:bg-zinc-200 transition-colors"
-                            >
-                                Book a Test Ride
-                            </Link>
+                            {/* Sidebar Header (Sticky) */}
+                            <div className="sticky top-0 z-20 flex items-center justify-between p-6 border-b border-zinc-800/50 bg-zinc-950/95 backdrop-blur-md">
+                                <Link href="/" onClick={() => setMobileOpen(false)}>
+                                    <img src="/logo.png" alt="RideEV Logo" className="h-6 w-auto" />
+                                </Link>
+                                <button
+                                    onClick={() => setMobileOpen(false)}
+                                    className="p-2 -mr-2 text-zinc-400 hover:text-white transition-colors bg-zinc-900 rounded-full"
+                                >
+                                    <CloseIcon className="h-5 w-5" />
+                                </button>
+                            </div>
+
+                            {/* Sidebar Content */}
+                            <div className="flex-1 flex flex-col py-8 px-6 gap-12 relative z-10">
+                                
+                                {/* Products Section (Accordion) */}
+                                <div>
+                                    <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-500 mb-6">Our Models</p>
+                                    <div className="flex flex-col gap-4">
+                                        {categories.map((cat, i) => (
+                                            <motion.div 
+                                                key={`mob-cat-${cat.id}`}
+                                                initial={{ opacity: 0, x: -10 }}
+                                                animate={{ opacity: 1, x: 0 }}
+                                                transition={{ duration: 0.4, delay: 0.1 + (i * 0.05), ease: "easeOut" }}
+                                                className="border-b border-zinc-800/50 last:border-0 overflow-hidden"
+                                            >
+                                                {/* Accordion Header */}
+                                                <button 
+                                                    onClick={() => setExpandedCategory(expandedCategory === cat.id ? null : cat.id)}
+                                                    className="w-full flex items-center justify-between py-5 text-left"
+                                                >
+                                                    <h3 className="text-base font-medium text-white tracking-tight">{cat.name}</h3>
+                                                    <svg 
+                                                        className={`w-4 h-4 text-zinc-500 transition-transform duration-300 ${expandedCategory === cat.id ? 'rotate-180' : ''}`} 
+                                                        fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+                                                    >
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                                                    </svg>
+                                                </button>
+
+                                                {/* Accordion Content */}
+                                                <AnimatePresence>
+                                                    {expandedCategory === cat.id && (
+                                                        <motion.div
+                                                            initial={{ height: 0, opacity: 0 }}
+                                                            animate={{ height: "auto", opacity: 1 }}
+                                                            exit={{ height: 0, opacity: 0 }}
+                                                            className="overflow-hidden"
+                                                        >
+                                                            <div className="pb-5 pt-0 flex flex-col gap-4 mt-2 pt-2">
+                                                                {cat.products?.map(prod => (
+                                                                    <Link
+                                                                        key={`mob-prod-${prod.id}`}
+                                                                        href={`/scooters/${prod.slug}`}
+                                                                        onClick={() => setMobileOpen(false)}
+                                                                        className="flex items-center gap-4 group bg-zinc-900/50 p-3 rounded-xl border border-zinc-800/50 hover:border-zinc-700 transition-all"
+                                                                    >
+                                                                        {/* Thumbnail Image */}
+                                                                        <div className="w-16 h-12 bg-black rounded-lg flex items-center justify-center p-1 shrink-0">
+                                                                            {prod.images?.length > 0 ? (
+                                                                                <img 
+                                                                                    src={prod.images.find(i => i.is_primary)?.image_url || prod.images[0].image_url} 
+                                                                                    className="w-full h-full object-contain" 
+                                                                                    alt={prod.name} 
+                                                                                />
+                                                                            ) : (
+                                                                                <div className="text-[8px] text-zinc-600">No Img</div>
+                                                                            )}
+                                                                        </div>
+                                                                        {/* Details */}
+                                                                        <div className="flex-1 min-w-0">
+                                                                            <p className="text-sm font-medium text-zinc-200 group-hover:text-white truncate">{prod.name}</p>
+                                                                            <p className="text-[10px] text-zinc-500 uppercase tracking-widest mt-0.5">₹{Number(prod.price).toLocaleString('en-IN')}</p>
+                                                                        </div>
+                                                                        {/* Arrow */}
+                                                                        <svg className="w-4 h-4 text-zinc-600 group-hover:text-white transition-colors shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                                                                        </svg>
+                                                                    </Link>
+                                                                ))}
+                                                                {(!cat.products || cat.products.length === 0) && (
+                                                                    <p className="text-xs text-zinc-600 italic text-center py-2">Models coming soon</p>
+                                                                )}
+                                                            </div>
+                                                        </motion.div>
+                                                    )}
+                                                </AnimatePresence>
+                                            </motion.div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Main Links Section */}
+                                <div className="border-t border-zinc-800/50 pt-8">
+                                    <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-500 mb-6">Explore</p>
+                                    <nav className="flex flex-col gap-4">
+                                        {navLinks.map((link, i) => (
+                                            <motion.div
+                                                key={link.name}
+                                                initial={{ opacity: 0, x: -10 }}
+                                                animate={{ opacity: 1, x: 0 }}
+                                                transition={{ duration: 0.4, delay: 0.2 + (i * 0.05), ease: "easeOut" }}
+                                            >
+                                                <Link
+                                                    href={link.href}
+                                                    onClick={() => setMobileOpen(false)}
+                                                    className="text-2xl font-medium tracking-tight text-white hover:text-zinc-300 transition-colors"
+                                                >
+                                                    {link.name}
+                                                </Link>
+                                            </motion.div>
+                                        ))}
+                                    </nav>
+                                </div>
+                            </div>
+
+                            {/* Sidebar Footer (Sticky Bottom) */}
+                            <div className="mt-auto sticky bottom-0 p-6 border-t border-zinc-800/50 bg-zinc-950/95 backdrop-blur-2xl">
+                                <Link
+                                    href="/book-a-test-ride"
+                                    onClick={() => setMobileOpen(false)}
+                                    className="block w-full rounded-xl bg-white px-6 py-4 text-center text-sm font-bold tracking-[0.2em] uppercase text-black hover:bg-zinc-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.1)]"
+                                >
+                                    Book Test Ride
+                                </Link>
+                            </div>
                         </motion.div>
-                    </motion.div>
+                    </>
                 )}
             </AnimatePresence>
 
@@ -336,7 +446,7 @@ export default function PublicLayout({ children, hideToaster = false }) {
                         {/* Brand */}
                         <div className="md:col-span-1">
                             <Link href="/" className="inline-block">
-                                <img src="logo.png" alt="RideEV Logo" className="h-10 w-auto opacity-80 hover:opacity-100 transition-opacity" />
+                                <img src="/logo.png" alt="RideEV Logo" className="h-10 w-auto opacity-80 hover:opacity-100 transition-opacity" />
                             </Link>
                             <p className="mt-6 text-sm text-zinc-400 max-w-xs leading-relaxed">
                                 Redefining urban mobility with intelligent, zero-emission vehicles designed for the modern world.
