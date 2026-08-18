@@ -97,9 +97,7 @@ export default function PublicLayout({ children, hideToaster = false }) {
                     
                     {/* Logo */}
                     <Link href="/" className="relative z-50 flex items-center">
-                        <span className="text-2xl font-semibold tracking-tight">
-                            RideEV
-                        </span>
+                        <img src="logo.png" alt="RideEV Logo" className="h-8 lg:h-10 w-auto" />
                     </Link>
 
                     {/* Desktop Navigation */}
@@ -337,8 +335,8 @@ export default function PublicLayout({ children, hideToaster = false }) {
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-12 lg:gap-8 mb-20">
                         {/* Brand */}
                         <div className="md:col-span-1">
-                            <Link href="/" className="text-2xl font-semibold tracking-tight text-zinc-50">
-                                RideEV
+                            <Link href="/" className="inline-block">
+                                <img src="logo.png" alt="RideEV Logo" className="h-10 w-auto opacity-80 hover:opacity-100 transition-opacity" />
                             </Link>
                             <p className="mt-6 text-sm text-zinc-400 max-w-xs leading-relaxed">
                                 Redefining urban mobility with intelligent, zero-emission vehicles designed for the modern world.
