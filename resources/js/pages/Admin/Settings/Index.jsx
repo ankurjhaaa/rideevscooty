@@ -38,6 +38,8 @@ function WebsiteSettingsCard({ settings }) {
         whatsapp: settings.whatsapp ?? '',
         email: settings.email ?? '',
         address: settings.address ?? '',
+        latitude: settings.latitude ?? '',
+        longitude: settings.longitude ?? '',
         _method: 'put',
     });
 
@@ -141,6 +143,41 @@ function WebsiteSettingsCard({ settings }) {
                         className={inputClass}
                     />
                     {errors.address && <p className="mt-1 text-sm text-red-600">{errors.address}</p>}
+                </div>
+
+                <div>
+                    <label className={labelClass}>Map Location (optional)</label>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                        <div>
+                            <input
+                                id="latitude"
+                                type="text"
+                                inputMode="decimal"
+                                value={data.latitude}
+                                onChange={(e) => setData('latitude', e.target.value)}
+                                placeholder="Latitude e.g. 25.5941"
+                                className={inputClass}
+                            />
+                            {errors.latitude && <p className="mt-1 text-sm text-red-600">{errors.latitude}</p>}
+                        </div>
+                        <div>
+                            <input
+                                id="longitude"
+                                type="text"
+                                inputMode="decimal"
+                                value={data.longitude}
+                                onChange={(e) => setData('longitude', e.target.value)}
+                                placeholder="Longitude e.g. 85.1376"
+                                className={inputClass}
+                            />
+                            {errors.longitude && <p className="mt-1 text-sm text-red-600">{errors.longitude}</p>}
+                        </div>
+                    </div>
+                    <p className="mt-1 text-xs text-[#706f6c] dark:text-[#A1A09A]">
+                        Google Maps par apni showroom location pe right-click karo, sabse upar wale number
+                        (jaise 25.5941, 85.1376) pe click karke copy kar lo — pehla number Latitude, dusra
+                        Longitude hai. Contact page par map yahi se dikhega.
+                    </p>
                 </div>
 
                 <SaveButton processing={processing} />

@@ -19,6 +19,7 @@ class HomeController extends Controller
             'products' => Product::with(['category', 'images'])
                 ->where('is_active', true)
                 ->orderBy('sort_order')
+                ->limit(6)
                 ->get(),
         ]);
     }

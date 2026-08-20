@@ -9,8 +9,8 @@ export default function Scooter({ product }) {
     );
 
     const numericSpecs = [
-        ['Top Speed', product.top_speed, 'km/h', 120], // Assuming 120 is max for progress bar
-        ['Range', product.range, 'km', 200],         // Assuming 200 is max
+        ['Top Speed', product.top_speed, 120], // 120 is an assumed max for the progress bar
+        ['Range', product.range, 200],         // 200 is an assumed max
     ].filter(([, value]) => value);
 
     const otherSpecs = [
@@ -70,13 +70,14 @@ export default function Scooter({ product }) {
                             {/* Studio Glow */}
                             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[70%] bg-zinc-800/20 rounded-full blur-[100px] pointer-events-none z-0" />
                             
-                            {/* Fake UI Badges */}
+                            {/* Fake UI Badges - commented out, not backed by real data/functionality
                             <div className="absolute top-8 left-8 z-20 flex gap-4">
                                 <span className="flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-900/80 backdrop-blur border border-zinc-800 text-[10px] font-bold tracking-widest uppercase text-white cursor-pointer hover:bg-white hover:text-black transition-colors">
                                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                                     360° View
                                 </span>
                             </div>
+                            */}
 
                             <AnimatePresence mode="wait">
                                 {activeImage ? (
@@ -118,14 +119,14 @@ export default function Scooter({ product }) {
                                     <h3 className="text-xs font-bold tracking-[0.25em] uppercase text-zinc-600 mb-8">Performance</h3>
                                     
                                     <div className="flex flex-col gap-8">
-                                        {numericSpecs.map(([label, value, unit, max]) => {
+                                        {numericSpecs.map(([label, value, max]) => {
                                             const numValue = parseInt(value) || 0;
                                             const percentage = Math.min((numValue / max) * 100, 100);
                                             return (
                                                 <div key={label} className="w-full">
                                                     <div className="flex justify-between items-end mb-4">
                                                         <span className="text-sm font-bold tracking-widest uppercase text-zinc-400">{label}</span>
-                                                        <span className="text-3xl font-medium text-white tracking-tight">{value} <span className="text-sm text-zinc-600">{unit}</span></span>
+                                                        <span className="text-3xl font-medium text-white tracking-tight">{value}</span>
                                                     </div>
                                                     <div className="w-full h-1 bg-zinc-900 rounded-full overflow-hidden">
                                                         <motion.div 
@@ -171,7 +172,7 @@ export default function Scooter({ product }) {
                                 </motion.div>
                             )}
 
-                            {/* Core Technology (New Section) */}
+                            {/* Core Technology section - commented out, was generic hardcoded copy not tied to actual product data
                             <motion.div variants={itemVariants} className="mb-16">
                                 <h3 className="text-xs font-bold tracking-[0.25em] uppercase text-zinc-600 mb-8">Core Technology</h3>
                                 <div className="grid grid-cols-1 gap-6">
@@ -195,6 +196,7 @@ export default function Scooter({ product }) {
                                     </div>
                                 </div>
                             </motion.div>
+                            */}
 
                             {/* Full Description */}
                             {product.description && (

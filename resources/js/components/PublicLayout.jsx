@@ -19,6 +19,11 @@ function CloseIcon(props) {
     );
 }
 
+function Logo({ settings, className = 'h-6 lg:h-8' }) {
+    const src = settings?.logo_url || '/logo.png';
+    return <img src={src} alt="RideEV Logo" className={`${className} w-auto object-contain`} />;
+}
+
 export default function PublicLayout({ children, hideToaster = false }) {
     const { props } = usePage();
     const categories = props.categories ?? [];
@@ -78,8 +83,9 @@ export default function PublicLayout({ children, hideToaster = false }) {
     }, [isMegaMenuOpen, categories, hoveredCategory]);
 
     const navLinks = [
-        { name: 'Dealerships', href: '/dealerships' },
         { name: 'About', href: '/about' },
+        { name: 'Videos', href: '/videos' },
+        { name: 'Dealership', href: '/dealership' },
         { name: 'Contact', href: '/contact' },
     ];
 
@@ -110,7 +116,7 @@ export default function PublicLayout({ children, hideToaster = false }) {
                     {/* Logo (Centered on Mobile, Left on Desktop) */}
                     <div className="flex-1 lg:flex-none flex justify-center lg:justify-start z-50">
                         <Link href="/" className="flex items-center">
-                            <img src="/logo.png" alt="RideEV Logo" className="h-6 lg:h-8 w-auto" />
+                            <Logo settings={settings} className="h-10 lg:h-16" />
                         </Link>
                     </div>
 
@@ -125,10 +131,10 @@ export default function PublicLayout({ children, hideToaster = false }) {
                     </div>
 
                     {/* Desktop Navigation (Absolute Center) */}
-                    <nav className="hidden lg:flex items-center justify-center gap-10 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-full">
-                        
-                        {/* Scooters Mega Menu */}
-                        <div 
+                    <nav className="hidden lg:flex items-center justify-center gap-10 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-full z-[60]">
+
+                        {/* Models Mega Menu */}
+                        <div
                             className="h-full flex items-center"
                             onMouseEnter={handleMegaMenuEnter}
                             onMouseLeave={handleMegaMenuLeave}
@@ -136,119 +142,12 @@ export default function PublicLayout({ children, hideToaster = false }) {
                             {/* We add a large transparent padding box around the trigger so the mouse never falls into a "gap" */}
                             <div className="relative py-6 -my-6 flex items-center">
                                 <button className="text-sm font-medium tracking-wide transition-opacity hover:opacity-60 flex items-center gap-2 cursor-pointer">
-                                    Scooters
+                                    Models
                                     <svg className={`w-3 h-3 transition-transform duration-300 ${isMegaMenuOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                                     </svg>
                                 </button>
                             </div>
-
-                            <AnimatePresence>
-                                {isMegaMenuOpen && (
-                                    <motion.div
-                                        initial={{ opacity: 0, y: -5 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: -5 }}
-                                        transition={{ duration: 0.2 }}
-                                        className="absolute left-0 top-full w-full bg-zinc-900 border-t border-zinc-800 shadow-[0_20px_40px_rgba(0,0,0,0.5)] overflow-hidden text-zinc-50 cursor-default z-50"
-                                        onMouseEnter={handleMegaMenuEnter}
-                                        onMouseLeave={handleMegaMenuLeave}
-                                    >
-                                        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12 flex">
-                                            
-                                            {/* Left Column: Categories */}
-                                            <div className="w-1/4 pr-8 border-r border-zinc-800">
-                                                <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-6">Categories</p>
-                                                <div className="flex flex-col gap-4">
-                                                    {categories.map(cat => (
-                                                        <button 
-                                                            key={`cat-${cat.id}`} 
-                                                            onMouseEnter={() => {
-                                                                setHoveredCategory(cat);
-                                                                setHoveredProduct(cat.products?.[0] ?? null);
-                                                            }}
-                                                            className={`text-left text-lg font-medium transition-colors ${hoveredCategory?.id === cat.id ? 'text-white' : 'text-zinc-500 hover:text-zinc-200'}`}
-                                                        >
-                                                            {cat.name}
-                                                        </button>
-                                                    ))}
-                                                </div>
-                                            </div>
-
-                                            {/* Middle Column: Products */}
-                                            <div className="w-1/4 px-8 border-r border-zinc-800">
-                                                <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-6">Models</p>
-                                                <div className="flex flex-col gap-4">
-                                                    {hoveredCategory?.products?.map(prod => (
-                                                        <button
-                                                            key={`prod-${prod.id}`}
-                                                            onMouseEnter={() => setHoveredProduct(prod)}
-                                                            className={`text-left text-lg font-medium transition-colors ${hoveredProduct?.id === prod.id ? 'text-white' : 'text-zinc-500 hover:text-zinc-200'}`}
-                                                        >
-                                                            {prod.name}
-                                                        </button>
-                                                    ))}
-                                                    {(!hoveredCategory?.products || hoveredCategory.products.length === 0) && (
-                                                        <p className="text-sm text-zinc-500 italic">No models available</p>
-                                                    )}
-                                                </div>
-                                            </div>
-
-                                            {/* Right Column: Details & Image */}
-                                            <div className="w-2/4 pl-12 flex items-center justify-between">
-                                                {hoveredProduct ? (
-                                                    <>
-                                                        <div className="flex-1 pr-8">
-                                                            <h4 className="text-4xl font-medium tracking-tight mb-4">{hoveredProduct.name}</h4>
-                                                            <p className="text-sm text-zinc-400 mb-8 max-w-sm font-light leading-relaxed line-clamp-2">
-                                                                {hoveredProduct.description || 'Experience the ultimate performance and zero emissions.'}
-                                                            </p>
-                                                            
-                                                            <div className="grid grid-cols-2 gap-8 mb-8 border-t border-zinc-800 pt-6">
-                                                                <div>
-                                                                    <p className="text-xl font-semibold">{hoveredProduct.range || '--'}</p>
-                                                                    <p className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold mt-1">Range</p>
-                                                                </div>
-                                                                <div>
-                                                                    <p className="text-xl font-semibold">{hoveredProduct.top_speed || '--'}</p>
-                                                                    <p className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold mt-1">Top Speed</p>
-                                                                </div>
-                                                            </div>
-
-                                                            <Link 
-                                                                href={`/scooters/${hoveredProduct.slug}`}
-                                                                onClick={() => setIsMegaMenuOpen(false)} 
-                                                                className="inline-block border-b-2 border-zinc-50 pb-1 text-xs font-bold uppercase tracking-widest hover:text-zinc-400 hover:border-zinc-400 transition-colors"
-                                                            >
-                                                                Explore Vehicle
-                                                            </Link>
-                                                        </div>
-                                                        <div className="w-1/2 flex items-center justify-center">
-                                                            {hoveredProduct.images?.length > 0 ? (
-                                                                <motion.img 
-                                                                    key={`img-${hoveredProduct.id}`}
-                                                                    initial={{ opacity: 0, scale: 0.95 }}
-                                                                    animate={{ opacity: 1, scale: 1 }}
-                                                                    transition={{ duration: 0.4 }}
-                                                                    src={hoveredProduct.images.find(i => i.is_primary)?.image_url || hoveredProduct.images[0].image_url} 
-                                                                    className="w-full h-auto max-h-[300px] object-contain drop-shadow-2xl" 
-                                                                    alt={hoveredProduct.name} 
-                                                                />
-                                                            ) : (
-                                                                <div className="w-full h-40 bg-zinc-800/50 flex items-center justify-center text-xs text-zinc-500 border border-dashed border-zinc-700">No Image</div>
-                                                            )}
-                                                        </div>
-                                                    </>
-                                                ) : (
-                                                    <div className="w-full h-full flex flex-col items-center justify-center text-zinc-500">
-                                                        <p className="text-sm">Hover over a model to see details</p>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
                         </div>
 
                         {navLinks.map((link) => (
@@ -261,6 +160,114 @@ export default function PublicLayout({ children, hideToaster = false }) {
                             </Link>
                         ))}
                     </nav>
+
+                    {/* Mega menu dropdown - positioned relative to the full-width header row, not the narrow centered nav */}
+                    <AnimatePresence>
+                        {isMegaMenuOpen && (
+                            <motion.div
+                                initial={{ opacity: 0, y: -5 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -5 }}
+                                transition={{ duration: 0.2 }}
+                                className="absolute left-0 top-full w-full bg-zinc-900 border-t border-zinc-800 shadow-[0_20px_40px_rgba(0,0,0,0.5)] overflow-hidden text-zinc-50 cursor-default z-50"
+                                onMouseEnter={handleMegaMenuEnter}
+                                onMouseLeave={handleMegaMenuLeave}
+                            >
+                                <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12 flex">
+
+                                    {/* Left Column: Categories */}
+                                    <div className="w-1/4 pr-8 border-r border-zinc-800">
+                                        <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-6">Categories</p>
+                                        <div className="flex flex-col gap-4">
+                                            {categories.map(cat => (
+                                                <button
+                                                    key={`cat-${cat.id}`}
+                                                    onMouseEnter={() => {
+                                                        setHoveredCategory(cat);
+                                                        setHoveredProduct(cat.products?.[0] ?? null);
+                                                    }}
+                                                    className={`text-left text-lg font-medium transition-colors ${hoveredCategory?.id === cat.id ? 'text-white' : 'text-zinc-500 hover:text-zinc-200'}`}
+                                                >
+                                                    {cat.name}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Middle Column: Products */}
+                                    <div className="w-1/4 px-8 border-r border-zinc-800">
+                                        <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-6">Models</p>
+                                        <div className="flex flex-col gap-4">
+                                            {hoveredCategory?.products?.map(prod => (
+                                                <button
+                                                    key={`prod-${prod.id}`}
+                                                    onMouseEnter={() => setHoveredProduct(prod)}
+                                                    className={`text-left text-lg font-medium transition-colors ${hoveredProduct?.id === prod.id ? 'text-white' : 'text-zinc-500 hover:text-zinc-200'}`}
+                                                >
+                                                    {prod.name}
+                                                </button>
+                                            ))}
+                                            {(!hoveredCategory?.products || hoveredCategory.products.length === 0) && (
+                                                <p className="text-sm text-zinc-500 italic">No models available</p>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {/* Right Column: Details & Image */}
+                                    <div className="w-2/4 pl-12 flex items-center justify-between">
+                                        {hoveredProduct ? (
+                                            <>
+                                                <div className="flex-1 pr-8">
+                                                    <h4 className="text-4xl font-medium tracking-tight mb-4">{hoveredProduct.name}</h4>
+                                                    <p className="text-sm text-zinc-400 mb-8 max-w-sm font-light leading-relaxed line-clamp-2">
+                                                        {hoveredProduct.description || 'Experience the ultimate performance and zero emissions.'}
+                                                    </p>
+
+                                                    <div className="grid grid-cols-2 gap-8 mb-8 border-t border-zinc-800 pt-6">
+                                                        <div>
+                                                            <p className="text-xl font-semibold">{hoveredProduct.range || '--'}</p>
+                                                            <p className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold mt-1">Range</p>
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-xl font-semibold">{hoveredProduct.top_speed || '--'}</p>
+                                                            <p className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold mt-1">Top Speed</p>
+                                                        </div>
+                                                    </div>
+
+                                                    <Link
+                                                        href={`/scooters/${hoveredProduct.slug}`}
+                                                        onClick={() => setIsMegaMenuOpen(false)}
+                                                        className="inline-block border-b-2 border-zinc-50 pb-1 text-xs font-bold uppercase tracking-widest hover:text-zinc-400 hover:border-zinc-400 transition-colors"
+                                                    >
+                                                        Explore Vehicle
+                                                    </Link>
+                                                </div>
+                                                <div className="w-1/2 flex items-center justify-center">
+                                                    {hoveredProduct.images?.length > 0 ? (
+                                                        <motion.img
+                                                            key={`img-${hoveredProduct.id}`}
+                                                            initial={{ opacity: 0, scale: 0.95 }}
+                                                            animate={{ opacity: 1, scale: 1 }}
+                                                            transition={{ duration: 0.4 }}
+                                                            src={hoveredProduct.images.find(i => i.is_primary)?.image_url || hoveredProduct.images[0].image_url}
+                                                            className="w-full h-auto max-h-[300px] object-contain drop-shadow-2xl"
+                                                            alt={hoveredProduct.name}
+                                                        />
+                                                    ) : (
+                                                        <div className="w-full h-40 bg-zinc-800/50 flex items-center justify-center text-xs text-zinc-500 border border-dashed border-zinc-700">No Image</div>
+                                                    )}
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <div className="w-full h-full flex flex-col items-center justify-center text-zinc-500">
+                                                <p className="text-sm">Hover over a model to see details</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
 
                     <div className="hidden lg:flex flex-1 justify-end items-center z-50">
                         <Link
@@ -298,7 +305,7 @@ export default function PublicLayout({ children, hideToaster = false }) {
                             {/* Sidebar Header (Sticky) */}
                             <div className="sticky top-0 z-20 flex items-center justify-between p-6 border-b border-zinc-800/50 bg-zinc-950/95 backdrop-blur-md">
                                 <Link href="/" onClick={() => setMobileOpen(false)}>
-                                    <img src="/logo.png" alt="RideEV Logo" className="h-6 w-auto" />
+                                    <Logo settings={settings} className="h-6" />
                                 </Link>
                                 <button
                                     onClick={() => setMobileOpen(false)}
@@ -446,7 +453,7 @@ export default function PublicLayout({ children, hideToaster = false }) {
                         {/* Brand */}
                         <div className="md:col-span-1">
                             <Link href="/" className="inline-block">
-                                <img src="/logo.png" alt="RideEV Logo" className="h-10 w-auto opacity-80 hover:opacity-100 transition-opacity" />
+                                <Logo settings={settings} className="h-10 opacity-80 hover:opacity-100 transition-opacity" />
                             </Link>
                             <p className="mt-6 text-sm text-zinc-400 max-w-xs leading-relaxed">
                                 Redefining urban mobility with intelligent, zero-emission vehicles designed for the modern world.
@@ -459,7 +466,7 @@ export default function PublicLayout({ children, hideToaster = false }) {
                             <ul className="space-y-4">
                                 <li>
                                     <Link href="/#scooters" className="text-sm font-medium text-zinc-300 hover:text-white transition-colors">
-                                        Scooters
+                                        Models
                                     </Link>
                                 </li>
                                 {navLinks.map((link) => (

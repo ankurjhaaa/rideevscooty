@@ -30,10 +30,16 @@ class SettingController extends Controller
             'whatsapp' => ['nullable', 'string', 'max:20'],
             'email' => ['nullable', 'email', 'max:255'],
             'address' => ['nullable', 'string', 'max:500'],
+            'latitude' => ['nullable', 'numeric', 'between:-90,90'],
+            'longitude' => ['nullable', 'numeric', 'between:-180,180'],
         ], [
             'logo.image' => 'Please upload a valid image file (JPG, PNG or WEBP).',
             'logo.max' => 'Logo size should be under 2 MB.',
             'email.email' => 'Please enter a valid email address.',
+            'latitude.numeric' => 'Latitude should be a number (e.g. 25.5941).',
+            'latitude.between' => 'Latitude should be between -90 and 90.',
+            'longitude.numeric' => 'Longitude should be a number (e.g. 85.1376).',
+            'longitude.between' => 'Longitude should be between -180 and 180.',
         ]);
 
         $settings = SiteSetting::current();

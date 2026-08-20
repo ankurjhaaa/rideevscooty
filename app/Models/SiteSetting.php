@@ -11,6 +11,7 @@ class SiteSetting extends Model
     protected $fillable = [
         'logo', 'phone', 'whatsapp', 'email', 'address',
         'instagram_url', 'facebook_url', 'youtube_url',
+        'latitude', 'longitude',
     ];
 
     protected $appends = ['logo_url'];

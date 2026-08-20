@@ -467,6 +467,26 @@ export default function Home({ heroProducts, products }) {
                 ))}
             </div>
 
+            {/* View All Scooters CTA */}
+            {displayProducts.length > 0 && (
+                <div className="relative z-10 bg-zinc-950 border-t border-zinc-800/60 py-20 text-center px-6">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: '-100px' }}
+                        transition={{ duration: 0.6 }}
+                    >
+                        <p className="text-zinc-500 font-light mb-6">Explore the complete RideEV lineup.</p>
+                        <Link
+                            href="/scooters"
+                            className="inline-flex items-center gap-3 text-xs font-bold tracking-[0.2em] uppercase text-white border border-white/20 rounded-full px-8 py-4 hover:bg-white hover:text-black transition-colors"
+                        >
+                            View All Scooters
+                        </Link>
+                    </motion.div>
+                </div>
+            )}
+
             {/* ELEGANT FEATURES SHOWCASE */}
             <section id="features" ref={featuresRef} className="py-24 lg:py-48 bg-zinc-950 z-20 relative border-t border-zinc-800/60">
                 <div className="max-w-7xl mx-auto px-6 lg:px-8">

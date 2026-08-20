@@ -80,13 +80,35 @@ function SettingsIcon(props) {
         </svg>
     );
 }
+function VideosIcon(props) {
+    return (
+        <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
+            <rect x="2.5" y="5.5" width="14" height="13" rx="2" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="m20.5 8.5 v7l-4-2.5v-2Z" />
+        </svg>
+    );
+}
+
+function DealershipIcon(props) {
+    return (
+        <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3 9.5 12 3l9 6.5M5 9.5V21h14V9.5" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 21v-6h6v6" />
+        </svg>
+    );
+}
+
 
 const navItems = [
     { label: 'Dashboard', href: dashboard.url(), icon: DashboardIcon },
     { label: 'Categories', href: '/admin/categories', icon: CategoriesIcon },
     { label: 'Products', href: '/admin/products', icon: ProductsIcon },
     { label: 'Enquiries', href: '/admin/enquiries', icon: EnquiriesIcon },
+    { label: 'Dealership Applications', href: '/admin/dealership-applications', icon: DealershipIcon },
+    { label: 'Videos', href: '/admin/videos', icon: VideosIcon },
+
     { label: 'Settings', href: '/admin/settings', icon: SettingsIcon },
+    
 ];
 
 export default function AdminLayout({ children }) {
