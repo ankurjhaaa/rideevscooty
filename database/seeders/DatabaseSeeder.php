@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class DatabaseSeeder extends Seeder
 {
@@ -22,233 +23,198 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // 1. Create Admin User
-        User::factory()->create([
-            'name' => 'RideEV Admin',
-            'email' => 'admin@gmail.com',
-            'password' => 'password',
-        ]);
+        User::firstOrCreate(
+            ['email' => 'admin@gmail.com'],
+            [
+                'name' => 'RideEV Admin',
+                'password' => 'Sikanderpur@-12345', // Will be hashed via User model casts
+            ]
+        );
 
         // 2. Create Default Site Settings
+        SiteSetting::truncate();
         SiteSetting::create([
-            'phone' => '+91 9876543210',
-            'whatsapp' => '+91 9876543210',
-            'email' => 'hello@rideevscooty.test',
-            'address' => '123, EV Tech Park, Green City, 110001',
-            'instagram_url' => 'https://instagram.com/rideevscooty',
-            'facebook_url' => 'https://facebook.com/rideevscooty',
-            'youtube_url' => 'https://youtube.com/rideevscooty',
+            'phone' => '9288018887',
+            'whatsapp' => '9288018887',
+            'email' => 'rideev6@gmail.com',
+            'address' => 'Purani Bazar near old adhar sewa kender opposite central bank of India muzaffarpur Bihar pin:- 842001',
+            'instagram_url' => 'https://www.instagram.com/rideev_official?igsi=cHAzczdiOWMwM3E0',
+            'youtube_url' => 'https://www.youtube.com/@RideEv',
         ]);
 
-        // 3. Create Categories
-        $categoryCity = Category::create([
-            'name' => 'City Commute',
-            'slug' => Str::slug('City Commute'),
-            'description' => 'Perfect for daily office and city rides with comfort and high mileage.',
+        // 3. Create Category
+        Category::truncate();
+        $category = Category::create([
+            'name' => 'Electric Two Wheeler',
+            'slug' => Str::slug('Electric Two Wheeler'),
+            'description' => 'Ride EV Scooty brings you a new generation of electric scooty designed for comfortable, economical and eco-friendly commuting. With modern styling, smooth performance, low running costs, Non RTO, No Registration, and Easy maintenance.',
             'is_active' => true,
         ]);
 
-        $categoryPower = Category::create([
-            'name' => 'High Performance',
-            'slug' => Str::slug('High Performance'),
-            'description' => 'Built for thrill-seekers with top speed and fast acceleration.',
-            'is_active' => true,
-        ]);
-
-        // 4. Create Products (Scooters)
-        $scooter1 = Product::create([
-            'category_id' => $categoryCity->id,
-            'name' => 'EV Sprint',
-            'slug' => Str::slug('EV Sprint'),
-            'price' => 75000,
-            'short_description' => 'The ultimate city rider with smart connectivity.',
-            'description' => 'EV Sprint offers an unmatched riding experience for city commuters. It features a sleek design, comfortable seating, and smart app integration for tracking battery life and navigation.',
-            'motor_power' => '1200W BLDC',
-            'top_speed' => '45 km/h',
-            'range' => '85 km',
-            'battery_capacity' => '2.5 kWh Lithium-ion',
-            'charging_time' => '4 Hours',
-            'emi_info' => 'Starts at ₹2,500/month',
-            'is_featured' => true,
-            'is_active' => true,
-        ]);
-
-
-
-        ProductColor::create([
-            'product_id' => $scooter1->id,
-            'name' => 'Midnight Black',
-            'hex_code' => '#111111',
-            'is_active' => true,
-        ]);
-        ProductColor::create([
-            'product_id' => $scooter1->id,
-            'name' => 'Pearl White',
-            'hex_code' => '#F8F9FA',
-            'is_active' => true,
-        ]);
-
-        $scooter2 = Product::create([
-            'category_id' => $categoryPower->id,
-            'name' => 'EV Thunder',
-            'slug' => Str::slug('EV Thunder'),
-            'price' => 110000,
-            'short_description' => 'Unleash the power with high speed and quick charge.',
-            'description' => 'EV Thunder is designed for those who crave speed and performance. With a robust motor and an advanced battery management system, it delivers thrilling rides on open roads.',
-            'motor_power' => '3000W BLDC',
-            'top_speed' => '85 km/h',
-            'range' => '120 km',
-            'battery_capacity' => '3.5 kWh Lithium-ion',
-            'charging_time' => '3 Hours (Fast Charge)',
-            'emi_info' => 'Starts at ₹3,800/month',
-            'is_featured' => true,
-            'is_active' => true,
-        ]);
-
-
-
-        ProductColor::create([
-            'product_id' => $scooter2->id,
-            'name' => 'Racing Red',
-            'hex_code' => '#E63946',
-            'is_active' => true,
-        ]);
-        ProductColor::create([
-            'product_id' => $scooter2->id,
-            'name' => 'Matte Grey',
-            'hex_code' => '#6C757D',
-            'is_active' => true,
-        ]);
+        // 4. Create Products
+        Product::truncate();
+        ProductColor::truncate();
         
-        $scooter3 = Product::create([
-            'category_id' => $categoryCity->id,
-            'name' => 'EV EcoLite',
-            'slug' => Str::slug('EV EcoLite'),
-            'price' => 55000,
-            'short_description' => 'Lightweight, economical and eco-friendly.',
-            'description' => 'EV EcoLite is a budget-friendly electric scooter ideal for short trips and students. It is incredibly lightweight, making it easy to maneuver in tight city traffic.',
-            'motor_power' => '800W Hub Motor',
-            'top_speed' => '25 km/h',
-            'range' => '60 km',
-            'battery_capacity' => '1.5 kWh Lead-acid',
-            'charging_time' => '6 Hours',
-            'emi_info' => 'Starts at ₹1,500/month',
-            'is_featured' => false,
-            'is_active' => true,
-        ]);
-
-        ProductColor::create([
-            'product_id' => $scooter3->id,
-            'name' => 'Sky Blue',
-            'hex_code' => '#87CEEB',
-            'is_active' => true,
-        ]);
-
-        // --- NEW DATA ADDED ---
-
-        $categoryOffRoad = Category::create([
-            'name' => 'Off-Road & Adventure',
-            'slug' => Str::slug('Off-Road & Adventure'),
-            'description' => 'Built tough for all terrains with extra suspension and durability.',
-            'is_active' => true,
-        ]);
-
-        $categoryDelivery = Category::create([
-            'name' => 'Delivery & Commercial',
-            'slug' => Str::slug('Delivery & Commercial'),
-            'description' => 'Heavy duty scooters with large cargo space for business needs.',
-            'is_active' => true,
-        ]);
-
-        $scooter4 = Product::create([
-            'category_id' => $categoryOffRoad->id,
-            'name' => 'EV DirtRider',
-            'slug' => Str::slug('EV DirtRider'),
-            'price' => 135000,
-            'short_description' => 'Conquer any terrain with advanced suspension.',
-            'description' => 'EV DirtRider is your perfect companion for off-road adventures. It features dual shock absorbers, all-terrain tires, and a rugged frame.',
-            'motor_power' => '4000W Peak',
-            'top_speed' => '70 km/h',
-            'range' => '90 km',
-            'battery_capacity' => '3.0 kWh',
-            'charging_time' => '5 Hours',
-            'emi_info' => 'Starts at ₹4,200/month',
-            'is_featured' => false,
-            'is_active' => true,
-        ]);
-        // NOTE: No images added for EV DirtRider to demonstrate the new image placeholders!
-
-        $scooter5 = Product::create([
-            'category_id' => $categoryDelivery->id,
-            'name' => 'EV CargoPro',
-            'slug' => Str::slug('EV CargoPro'),
-            'price' => 85000,
-            'short_description' => 'Designed for heavy loads and long delivery shifts.',
-            'description' => 'EV CargoPro offers maximum utility with a reinforced rear carrier, dual batteries for extended range, and low maintenance costs.',
-            'motor_power' => '1500W Hub Motor',
-            'top_speed' => '45 km/h',
-            'range' => '140 km (Dual Battery)',
-            'battery_capacity' => '4.0 kWh',
-            'charging_time' => '6 Hours',
-            'emi_info' => 'Starts at ₹2,800/month',
-            'is_featured' => true,
-            'is_active' => true,
-        ]);
-
-
-
-        $scooter6 = Product::create([
-            'category_id' => $categoryCity->id,
-            'name' => 'EV Swift',
-            'slug' => Str::slug('EV Swift'),
-            'price' => 68000,
-            'short_description' => 'Nimble and quick for everyday errands.',
-            'description' => 'Get around the city swiftly with this compact and easy-to-handle electric scooter.',
-            'motor_power' => '1000W BLDC',
-            'top_speed' => '40 km/h',
-            'range' => '75 km',
-            'battery_capacity' => '2.0 kWh',
-            'charging_time' => '4 Hours',
-            'emi_info' => 'Starts at ₹2,100/month',
-            'is_featured' => false,
-            'is_active' => true,
-        ]);
-        // --- SEED IMAGES FOR ALL PRODUCTS ---
-        $sourceImages = [
-            '1_f7e708b398.png',
-            'G_Max_Green_Left2368_3_11zon_6889f5c817.png',
-            'nexus_full_8f9eb2f50f.png',
+        $productsData = [
+            [
+                'name' => 'Ride EV BMW',
+                'price' => 77900,
+                'short_description' => 'Ride EV Scooty is a stylish, eco-friendly electric scooter designed for smooth, comfortable, and economical everyday commuting. It offers easy handling, low running costs, and zero-emission travel—perfect for city rides.',
+                'description' => 'Tube less Tyre, Dual Disk, LED Lights, Fully Digital Meter, Mobile Charging Port, Anti Theft Alarm, LFP Battery 2+2 Years ETC.',
+                'motor_power' => '1200W BLDC Hub Motor',
+                'range' => 'UPTO 130 KM',
+                'battery_capacity' => '48V 30Ah Lithium-ion',
+                'charging_time' => '4-5 hours',
+                'emi_info' => 'Starting at Rs. 2,499/month',
+                'is_featured' => true,
+                'colors' => ['Matte Black', 'White', 'Green', 'Silver']
+            ],
+            [
+                'name' => 'RIDE EV PRIME',
+                'price' => 63999,
+                'short_description' => 'Ride EV Scooty is a stylish, eco-friendly electric scooter designed for smooth, comfortable, and economical everyday commuting. It offers easy handling, low running costs, and zero-emission travel—perfect for city rides.',
+                'description' => 'Tube less Tyre, Dual Disk, LED Lights, Fully Digital Meter, Mobile Charging Port, Anti Theft Alarm, LFP Battery 2+2 Years ETC.',
+                'range' => 'UPTO 80 KM',
+                'is_featured' => false,
+                'colors' => ['Black', 'White', 'Green', 'Silver', 'Blue', 'Yellow', 'Red']
+            ],
+            [
+                'name' => 'RIDE EV PRIME PRO',
+                'price' => 66999,
+                'short_description' => 'Ride EV Scooty is a stylish, eco-friendly electric scooter designed for smooth, comfortable, and economical everyday commuting. It offers easy handling, low running costs, and zero-emission travel—perfect for city rides.',
+                'description' => 'Tube less Tyre, Dual Disk, LED Lights, Fully Digital Meter, Mobile Charging Port, Anti Theft Alarm, LFP Battery 2+2 Years ETC.',
+                'range' => 'UPTO 80 KM',
+                'is_featured' => false,
+                'colors' => ['Black', 'White', 'Green', 'Silver', 'Blue', 'Yellow', 'Red']
+            ],
+            [
+                'name' => 'RIDE EV TANK',
+                'price' => 98999,
+                'short_description' => 'Ride EV Scooty is a stylish, eco-friendly electric scooter designed for smooth, comfortable, and economical everyday commuting. It offers easy handling, low running costs, and zero-emission travel—perfect for city rides.',
+                'description' => 'Tube less Tyre, Dual Disk, LED Lights, Fully Digital Meter, Mobile Charging Port, Anti Theft Alarm, LFP Battery 2+2 Years ETC.',
+                'range' => 'UPTO 130 KM',
+                'is_featured' => false,
+                'colors' => ['Black', 'White', 'Silver', 'Blue']
+            ],
+            [
+                'name' => 'RIDE EV COMFORT',
+                'price' => 70900,
+                'short_description' => 'Ride EV Scooty is a stylish, eco-friendly electric scooter designed for smooth, comfortable, and economical everyday commuting. It offers easy handling, low running costs, and zero-emission travel—perfect for city rides.',
+                'description' => 'Tube less Tyre, Dual Disk, LED Lights, Fully Digital Meter, Mobile Charging Port, Anti Theft Alarm, LFP Battery 2+2 Years ETC.',
+                'range' => 'UPTO 80 KM',
+                'is_featured' => false,
+                'colors' => ['Black', 'White', 'Green', 'Silver', 'Blue', 'Yellow', 'Red']
+            ],
+            [
+                'name' => 'RIDE EV COMFORT PRO',
+                'price' => 75900,
+                'short_description' => 'Ride EV Scooty is a stylish, eco-friendly electric scooter designed for smooth, comfortable, and economical everyday commuting. It offers easy handling, low running costs, and zero-emission travel—perfect for city rides.',
+                'description' => 'Tube less Tyre, Dual Disk, LED Lights, Fully Digital Meter, Mobile Charging Port, Anti Theft Alarm, LFP Battery 2+2 Years ETC.',
+                'range' => 'UPTO 80 KM',
+                'is_featured' => false,
+                'colors' => ['Black', 'White', 'Green', 'Silver', 'Blue', 'Yellow', 'Red']
+            ],
+            [
+                'name' => 'RIDE EV NEO',
+                'price' => 50000,
+                'short_description' => 'Ride EV Scooty is a stylish, eco-friendly electric scooter designed for smooth, comfortable, and economical everyday commuting. It offers easy handling, low running costs, and zero-emission travel—perfect for city rides.',
+                'description' => 'Tube less Tyre, Front Disk, LED Lights, Fully Digital Meter, Mobile Charging Port, Anti Theft Alarm, LFP Battery 2+2 Years ETC.',
+                'range' => 'UPTO 80 KM',
+                'is_featured' => false,
+                'colors' => ['Black', 'White', 'Green', 'Silver', 'Blue', 'Yellow', 'Red']
+            ],
+            [
+                'name' => 'RIDE EV PHANTAM',
+                'price' => 72000,
+                'short_description' => 'Ride EV Scooty is a stylish, eco-friendly electric scooter designed for smooth, comfortable, and economical everyday commuting. It offers easy handling, low running costs, and zero-emission travel—perfect for city rides.',
+                'description' => 'Tube less Tyre, Dual Disk, LED Lights, Fully Digital Meter, Mobile Charging Port, Anti Theft Alarm, LFP Battery 2+2 Years ETC.',
+                'range' => 'UPTO 80 KM',
+                'is_featured' => false,
+                'colors' => ['Black', 'White', 'Silver', 'Blue']
+            ],
+            [
+                'name' => 'RIDE EV Q+',
+                'price' => 73900,
+                'short_description' => 'Ride EV Scooty is a stylish, eco-friendly electric scooter designed for smooth, comfortable, and economical everyday commuting. It offers easy handling, low running costs, and zero-emission travel—perfect for city rides.',
+                'description' => 'Tube less Tyre, Dual Disk, LED Lights, Fully Digital Meter, Mobile Charging Port, Anti Theft Alarm, LFP Battery 2+2 Years ETC.',
+                'range' => 'UPTO 80 KM',
+                'is_featured' => false,
+                'colors' => ['Black', 'White', 'Green', 'Silver', 'Blue']
+            ],
+            [
+                'name' => 'RIDE EV SPARK',
+                'price' => 80000, // Replaced 8XXXX
+                'short_description' => 'Ride EV Scooty is a stylish, eco-friendly electric scooter designed for smooth, comfortable, and economical everyday commuting. It offers easy handling, low running costs, and zero-emission travel—perfect for city rides.',
+                'description' => 'Tube less Tyre, Dual Disk, LED Lights, Fully Digital Meter, Mobile Charging Port, Anti Theft Alarm, LFP Battery 2+2 Years ETC.',
+                'range' => 'UPTO 80 KM',
+                'is_featured' => false,
+                'colors' => ['Black', 'White', 'Green', 'Silver', 'Blue']
+            ],
+            [
+                'name' => 'RIDE EV STROM',
+                'price' => 70000, // Replaced 7XXXX
+                'short_description' => 'Ride EV Scooty is a stylish, eco-friendly electric scooter designed for smooth, comfortable, and economical everyday commuting. It offers easy handling, low running costs, and zero-emission travel—perfect for city rides.',
+                'description' => 'Tube less Tyre, Dual Disk, LED Lights, Fully Digital Meter, Mobile Charging Port, Anti Theft Alarm, LFP Battery 2+2 Years ETC.',
+                'range' => 'UPTO 80 KM',
+                'is_featured' => false,
+                'colors' => ['Black', 'White', 'Green', 'Silver', 'Blue']
+            ],
+            [
+                'name' => 'RIDE EV DRAGSTER',
+                'price' => 77900,
+                'short_description' => 'Ride EV Scooty is a stylish, eco-friendly electric scooter designed for smooth, comfortable, and economical everyday commuting. It offers easy handling, low running costs, and zero-emission travel—perfect for city rides.',
+                'description' => 'Tube less Tyre, Dual Disk, LED Lights, Fully Digital Meter, Mobile Charging Port, Anti Theft Alarm, LFP Battery 2+2 Years ETC.',
+                'range' => 'UPTO 80 KM',
+                'is_featured' => false,
+                'colors' => ['Black', 'White', 'Green', 'Silver', 'Blue']
+            ],
         ];
 
-        \Illuminate\Support\Facades\Storage::disk('public')->makeDirectory('products');
+        // 5. Seed Images
+        Storage::disk('public')->makeDirectory('products');
         ProductImage::truncate();
 
-        $allProducts = Product::all();
-        foreach ($allProducts as $product) {
-            // Give every product these 3 images randomly
-            $imagesToUse = $sourceImages;
-            shuffle($imagesToUse);
+        // The image provided by the user
+        $mainImageName = 'image_product.png';
+        $sourcePath = public_path('images/' . $mainImageName);
 
-            foreach ($imagesToUse as $index => $imageName) {
-                $sourcePath = public_path('images/' . $imageName);
-                
-                // Copy to storage to emulate normal upload
-                $uniqueImageName = $product->id . '_' . $index . '_' . $imageName;
+        foreach ($productsData as $data) {
+            $colors = $data['colors'];
+            unset($data['colors']);
+            
+            $data['category_id'] = $category->id;
+            $data['slug'] = Str::slug($data['name']);
+            $data['is_active'] = true;
+            
+            $product = Product::create($data);
+
+            // Add colors
+            foreach ($colors as $color) {
+                ProductColor::create([
+                    'product_id' => $product->id,
+                    'name' => trim($color),
+                    'hex_code' => '#000000', // Default hex code
+                    'is_active' => true,
+                ]);
+            }
+
+            // Add the main image if it exists
+            if (file_exists($sourcePath)) {
+                $uniqueImageName = $product->id . '_' . $mainImageName;
                 $destinationPath = 'products/' . $uniqueImageName;
                 
-                if (file_exists($sourcePath)) {
-                    \Illuminate\Support\Facades\Storage::disk('public')->put(
-                        $destinationPath,
-                        file_get_contents($sourcePath)
-                    );
+                Storage::disk('public')->put(
+                    $destinationPath,
+                    file_get_contents($sourcePath)
+                );
 
-                    ProductImage::create([
-                        'product_id' => $product->id,
-                        'image_path' => $destinationPath,
-                        'type' => $index === 0 ? 'main' : 'side',
-                        'is_primary' => $index === 0,
-                        'sort_order' => $index,
-                    ]);
-                }
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'image_path' => $destinationPath,
+                    'type' => 'main',
+                    'is_primary' => true,
+                    'sort_order' => 1,
+                ]);
             }
         }
     }
