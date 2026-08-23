@@ -1,4 +1,4 @@
-import { Head } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import PublicLayout from '../components/PublicLayout';
 import PublicPagination from '../components/PublicPagination';
@@ -36,9 +36,24 @@ const PLATFORM_ICON = {
 };
 
 export default function Videos({ videos }) {
+    const { props } = usePage();
+    const seo = props.seo || {};
+    const pageTitle = "Videos & Reviews | Ride EV";
+    const pageDescription = "Watch Ride EV videos, customer reviews, unboxing, and test ride experiences of our electric scooters.";
+
     return (
         <PublicLayout>
-            <Head title="Videos | RideEV" />
+            <Head>
+                <title>{pageTitle}</title>
+                <meta name="description" content={pageDescription} />
+                <meta name="keywords" content={seo.keywords} />
+                <meta property="og:title" content={pageTitle} />
+                <meta property="og:description" content={pageDescription} />
+                <meta property="og:image" content={seo.image} />
+                <meta property="og:url" content={seo.url} />
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={pageTitle} />
+            </Head>
 
             <div className="bg-zinc-950 text-white min-h-screen pt-[140px] pb-24 px-6 lg:px-8">
                 <div className="max-w-7xl mx-auto">

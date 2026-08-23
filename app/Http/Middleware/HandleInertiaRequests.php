@@ -57,6 +57,13 @@ class HandleInertiaRequests extends Middleware
                 ->orderBy('sort_order')
                 ->get(),
             'siteSettings' => fn () => $request->routeIs('admin.*') ? null : SiteSetting::current(),
+            'seo' => fn () => $request->routeIs('admin.*') ? null : [
+                'title' => 'Ride EV | Premium Electric Scooters & Two Wheelers in Bihar',
+                'description' => 'Discover Ride EV\'s premium range of zero-emission electric scooters. Experience modern styling, smooth performance, low running costs, and easy maintenance. Buy your electric scooty today.',
+                'keywords' => 'Ride EV, Electric Scooty, Electric Two Wheeler, EV Bihar, Zero Emission, Electric Scooter India',
+                'image' => asset('images/image_product.png'),
+                'url' => url()->current(),
+            ],
         ];
     }
 }

@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 import PublicLayout from '../components/PublicLayout';
@@ -61,9 +61,24 @@ export default function About() {
     });
     const lineHeight = useTransform(valuesScroll, [0, 1], ["0%", "100%"]);
 
+    const { props } = usePage();
+    const seo = props.seo || {};
+    const pageTitle = "About Us | Ride EV";
+    const pageDescription = "Learn about Ride EV's mission to revolutionize urban mobility with zero-emission, high-performance electric scooters.";
+
     return (
         <PublicLayout>
-            <Head title="About Us | RideEV" />
+            <Head>
+                <title>{pageTitle}</title>
+                <meta name="description" content={pageDescription} />
+                <meta name="keywords" content={seo.keywords} />
+                <meta property="og:title" content={pageTitle} />
+                <meta property="og:description" content={pageDescription} />
+                <meta property="og:image" content={seo.image} />
+                <meta property="og:url" content={seo.url} />
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={pageTitle} />
+            </Head>
 
             <div className="bg-zinc-950 text-white min-h-screen selection:bg-white selection:text-black">
 

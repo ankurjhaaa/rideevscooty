@@ -35,9 +35,23 @@ export default function ContactUs() {
     const hasMap = settings.latitude && settings.longitude;
     const hasAnyInfo = settings.phone || settings.email || settings.address;
 
+    const seo = props.seo || {};
+    const pageTitle = "Contact Us | Ride EV";
+    const pageDescription = "Get in touch with Ride EV. Find our contact details, email address, and customer support information to help you with your electric scooter queries.";
+
     return (
         <PublicLayout>
-            <Head title="Contact Us | RideEV" />
+            <Head>
+                <title>{pageTitle}</title>
+                <meta name="description" content={pageDescription} />
+                <meta name="keywords" content={seo.keywords} />
+                <meta property="og:title" content={pageTitle} />
+                <meta property="og:description" content={pageDescription} />
+                <meta property="og:image" content={seo.image} />
+                <meta property="og:url" content={seo.url} />
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={pageTitle} />
+            </Head>
 
             <div className="bg-zinc-950 text-white min-h-screen pt-[140px] pb-24 px-6 lg:px-8">
                 <div className="max-w-6xl mx-auto">

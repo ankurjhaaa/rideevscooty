@@ -118,7 +118,9 @@ export default function BookTestRide({ timeSlots, preselectedProductId }) {
     if (categories.length === 0) {
         return (
             <PublicLayout hideToaster={true}>
-                <Head title="Book a Test Ride | RideEV" />
+                <Head>
+                    <title>Book a Test Ride | Ride EV</title>
+                </Head>
                 <div className="flex items-center justify-center min-h-[70vh] bg-zinc-950">
                     <div className="text-center">
                         <h1 className="text-3xl font-light text-zinc-500 mb-4">No models available yet</h1>
@@ -129,9 +131,23 @@ export default function BookTestRide({ timeSlots, preselectedProductId }) {
         );
     }
 
+    const seo = props.seo || {};
+    const pageTitle = "Book a Test Ride | Ride EV";
+    const pageDescription = "Book a free test ride of your favorite Ride EV electric scooter. Experience the performance and comfort before you buy.";
+
     return (
         <PublicLayout hideToaster={true}>
-            <Head title="Configure Your Ride | RideEV" />
+            <Head>
+                <title>{pageTitle}</title>
+                <meta name="description" content={pageDescription} />
+                <meta name="keywords" content={seo.keywords} />
+                <meta property="og:title" content={pageTitle} />
+                <meta property="og:description" content={pageDescription} />
+                <meta property="og:image" content={seo.image} />
+                <meta property="og:url" content={seo.url} />
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={pageTitle} />
+            </Head>
 
             <div className="min-h-screen bg-zinc-950 flex flex-col lg:flex-row pt-[72px] lg:pt-[88px]">
                 

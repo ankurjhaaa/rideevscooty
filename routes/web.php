@@ -19,5 +19,6 @@ Route::inertia('/dealership', 'Contact')->name('dealership');
 Route::post('/dealership', [DealershipController::class, 'store'])->name('dealership.store');
 Route::inertia('/contact', 'ContactUs')->name('contact');
 Route::get('/videos', [VideoController::class, 'index'])->name('videos.index');
+Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
 
 require __DIR__.'/admin.php';

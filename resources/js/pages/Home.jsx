@@ -366,6 +366,7 @@ function EVBadge() {
 // ==========================================
 export default function Home({ heroProducts, products }) {
     const { props } = usePage();
+    const seo = props.seo || {};
     const [activeProductIndex, setActiveProductIndex] = useState(-1);
 
     const displayHeroProducts = heroProducts?.length > 0 ? heroProducts : products;
@@ -423,7 +424,20 @@ export default function Home({ heroProducts, products }) {
 
     return (
         <PublicLayout>
-            <Head title="RideEV — The Future is Electric" />
+            <Head>
+                <title>{seo.title || 'Ride EV | Premium Electric Scooters'}</title>
+                <meta name="description" content={seo.description} />
+                <meta name="keywords" content={seo.keywords} />
+                <meta property="og:title" content={seo.title} />
+                <meta property="og:description" content={seo.description} />
+                <meta property="og:image" content={seo.image} />
+                <meta property="og:url" content={seo.url} />
+                <meta property="og:type" content="website" />
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={seo.title} />
+                <meta name="twitter:description" content={seo.description} />
+                <meta name="twitter:image" content={seo.image} />
+            </Head>
 
             <EVBadge />
 

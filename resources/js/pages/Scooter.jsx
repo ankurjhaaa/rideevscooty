@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import PublicLayout from '../components/PublicLayout';
@@ -7,6 +7,12 @@ export default function Scooter({ product }) {
     const [activeImage, setActiveImage] = useState(
         product.images.find((img) => img.is_primary) ?? product.images[0] ?? null,
     );
+    const { props } = usePage();
+    const seo = props.seo || {};
+
+    const pageTitle = `${product.name} | Ride EV`;
+    const pageDescription = product.short_description || seo.description;
+    const pageImage = activeImage ? `/storage/${activeImage.path}` : seo.image;
 
     const numericSpecs = [
         ['Top Speed', product.top_speed, 120], // 120 is an assumed max for the progress bar
@@ -34,7 +40,20 @@ export default function Scooter({ product }) {
 
     return (
         <PublicLayout>
-            <Head title={`${product.name} | RideEV`} />
+            <Head>
+                <title>{pageTitle}</title>
+                <meta name="description" content={pageDescription} />
+                <meta name="keywords" content={`Buy ${product.name}, ${product.name} price, electric scooter, Ride EV`} />
+                <meta property="og:title" content={pageTitle} />
+                <meta property="og:description" content={pageDescription} />
+                <meta property="og:image" content={pageImage} />
+                <meta property="og:url" content={seo.url} />
+                <meta property="og:type" content="product" />
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={pageTitle} />
+                <meta name="twitter:description" content={pageDescription} />
+                <meta name="twitter:image" content={pageImage} />
+            </Head>
 
             <div className="bg-black min-h-screen relative pt-[88px] pb-24">
                 <div className="max-w-[2000px] mx-auto grid grid-cols-1 lg:grid-cols-12 items-start relative">
