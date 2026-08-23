@@ -330,13 +330,14 @@ function FullScreenProduct({ product, index, setActiveIndex, isFirst }) {
 // ==========================================
 function EVBadge() {
     return (
-        <div className="fixed bottom-10 left-10 z-50 hidden lg:flex items-center justify-center w-32 h-32 pointer-events-none">
+        <div className="fixed bottom-10 left-10 z-50 hidden lg:flex items-center justify-center w-40 h-40 pointer-events-none">
             <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                className="absolute inset-0 flex items-center justify-center text-white mix-blend-difference"
+                className="absolute inset-0 flex items-center justify-center"
             >
-                <svg viewBox="0 0 100 100" className="w-full h-full overflow-visible">
+                {/* Rotating Text */}
+                <svg viewBox="0 0 100 100" className="absolute w-full h-full overflow-visible text-white mix-blend-difference">
                     <defs>
                         <path id="circle" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" />
                     </defs>
@@ -346,8 +347,16 @@ function EVBadge() {
                         </textPath>
                     </text>
                 </svg>
+
+                {/* Rotating Logo in the Center */}
+                <div className="w-28 h-28 rounded-full overflow-hidden flex items-center justify-center bg-white shadow-lg">
+                    <img 
+                        src="/images/badge-logo.png" 
+                        alt="Ride EV Logo" 
+                        className="w-full h-full object-cover"
+                    />
+                </div>
             </motion.div>
-            <div className="w-2 h-2 bg-white rounded-full mix-blend-difference" />
         </div>
     );
 }
