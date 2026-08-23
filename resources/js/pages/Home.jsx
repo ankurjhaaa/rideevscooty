@@ -77,8 +77,8 @@ function HeroCarousel({ products, onScrollDown }) {
                                     </span>
                                 </div>
 
-                                {/* Product Name - Truncated to 1 line */}
-                                <h1 className="text-5xl sm:text-6xl lg:text-[5.5rem] font-medium tracking-tight text-white leading-[1.05] mb-4 lg:mb-6 truncate w-full">
+                                {/* Product Title */}
+                                <h1 className="text-4xl sm:text-5xl lg:text-[4.5rem] font-medium tracking-tight text-white leading-[1.05] mb-4 lg:mb-6 line-clamp-2 w-full">
                                     {activeProduct.name}
                                 </h1>
 
@@ -266,8 +266,8 @@ function FullScreenProduct({ product, index, setActiveIndex, isFirst }) {
                             transition={{ duration: 0.8 }}
                             className="w-full"
                         >
-                            {/* Product Name - Truncated to 1 line */}
-                            <h3 className="text-5xl sm:text-6xl md:text-6xl xl:text-7xl font-medium text-white mb-4 lg:mb-6 leading-[1.05] tracking-tight truncate w-full">
+                            {/* Product Title */}
+                            <h3 className="text-4xl sm:text-5xl md:text-5xl xl:text-6xl font-medium text-white mb-4 lg:mb-6 leading-[1.05] tracking-tight line-clamp-2 w-full">
                                 {product.name}
                             </h3>
 
