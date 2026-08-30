@@ -186,20 +186,68 @@ function WebsiteSettingsCard({ settings }) {
     );
 }
 
+function QrUploadField({ id, label, hint, previewUrl, onPreviewChange, data, setData, errors }) {
+    function handleChange(e) {
+        const file = e.target.files?.[0] ?? null;
+        setData(id, file);
+        if (file) {
+            onPreviewChange(URL.createObjectURL(file));
+        }
+    }
+
+    return (
+        <div>
+            <label className={labelClass}>{label}</label>
+            <div className="flex items-center gap-4">
+                {previewUrl ? (
+                    <img
+                        src={previewUrl}
+                        alt={`${label} preview`}
+                        className="h-16 w-16 rounded-lg border border-[#e3e3e0] object-contain p-1 dark:border-[#3E3E3A]"
+                    />
+                ) : (
+                    <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-[#f4f4f3] text-[10px] text-[#a3a29e] dark:bg-[#1c1c1a]">
+                        No QR
+                    </div>
+                )}
+                <label
+                    htmlFor={id}
+                    className="cursor-pointer rounded-lg border border-dashed border-[#e3e3e0] px-4 py-2 text-sm text-[#706f6c] hover:border-emerald-500 hover:text-emerald-600 dark:border-[#3E3E3A] dark:text-[#A1A09A]"
+                >
+                    {previewUrl ? 'Change QR image' : 'Upload QR image'}
+                    <input id={id} type="file" accept="image/*" className="hidden" onChange={handleChange} />
+                </label>
+            </div>
+            {hint && <p className="mt-1 text-xs text-[#706f6c] dark:text-[#A1A09A]">{hint}</p>}
+            {errors[id] && <p className="mt-1 text-sm text-red-600">{errors[id]}</p>}
+        </div>
+    );
+}
+
 function SocialMediaCard({ settings }) {
-    const { data, setData, put, processing, errors } = useForm({
+    const [googleQrPreview, setGoogleQrPreview] = useState(settings.google_review_qr_url);
+    const [instagramQrPreview, setInstagramQrPreview] = useState(settings.instagram_qr_url);
+
+    const { data, setData, post, processing, errors } = useForm({
         instagram_url: settings.instagram_url ?? '',
         facebook_url: settings.facebook_url ?? '',
         youtube_url: settings.youtube_url ?? '',
+        google_review_url: settings.google_review_url ?? '',
+        google_review_qr: null,
+        instagram_qr: null,
+        _method: 'put',
     });
 
     function submit(e) {
         e.preventDefault();
-        put('/admin/settings/social', { preserveScroll: true });
+        post('/admin/settings/social', { forceFormData: true, preserveScroll: true });
     }
 
     return (
-        <Card title="Social Media" description="Khali chhode gaye links website par nahi dikhenge.">
+        <Card
+            title="Social Media"
+            description="Khali chhode gaye links website par nahi dikhenge. QR codes footer mein scan-to-follow/review ke liye dikhte hain."
+        >
             <form onSubmit={submit} className="space-y-4">
                 <div>
                     <label htmlFor="instagram_url" className={labelClass}>
@@ -243,6 +291,45 @@ function SocialMediaCard({ settings }) {
                     />
                     {errors.youtube_url && <p className="mt-1 text-sm text-red-600">{errors.youtube_url}</p>}
                 </div>
+
+                <div className="border-t border-[#e3e3e0] pt-4 dark:border-[#3E3E3A]">
+                    <label htmlFor="google_review_url" className={labelClass}>
+                        Google Review URL
+                    </label>
+                    <input
+                        id="google_review_url"
+                        type="text"
+                        value={data.google_review_url}
+                        onChange={(e) => setData('google_review_url', e.target.value)}
+                        placeholder="https://g.page/r/xxxxxxxx/review"
+                        className={inputClass}
+                    />
+                    {errors.google_review_url && (
+                        <p className="mt-1 text-sm text-red-600">{errors.google_review_url}</p>
+                    )}
+                </div>
+
+                <QrUploadField
+                    id="google_review_qr"
+                    label="Google Review QR Code"
+                    hint="Google Business Profile se apna review QR download karke yahan upload karo."
+                    previewUrl={googleQrPreview}
+                    onPreviewChange={setGoogleQrPreview}
+                    data={data}
+                    setData={setData}
+                    errors={errors}
+                />
+
+                <QrUploadField
+                    id="instagram_qr"
+                    label="Instagram QR Code"
+                    hint="Apna Instagram profile QR (jaise Instagram app se generate kiya hua) yahan upload karo."
+                    previewUrl={instagramQrPreview}
+                    onPreviewChange={setInstagramQrPreview}
+                    data={data}
+                    setData={setData}
+                    errors={errors}
+                />
 
                 <SaveButton processing={processing} />
             </form>

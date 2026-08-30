@@ -1,0 +1,30 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('site_settings', function (Blueprint $table) {
+            $table->string('google_review_qr')->nullable();
+            $table->string('google_review_url')->nullable();
+            $table->string('instagram_qr')->nullable();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('site_settings', function (Blueprint $table) {
+            $table->dropColumn(['google_review_qr', 'google_review_url', 'instagram_qr']);
+        });
+    }
+};

@@ -64,13 +64,34 @@ class SettingController extends Controller
             'instagram_url' => ['nullable', 'url', 'max:255'],
             'facebook_url' => ['nullable', 'url', 'max:255'],
             'youtube_url' => ['nullable', 'url', 'max:255'],
+            'google_review_url' => ['nullable', 'url', 'max:255'],
+            'google_review_qr' => ['nullable', 'image', 'max:2048'],
+            'instagram_qr' => ['nullable', 'image', 'max:2048'],
         ], [
             'instagram_url.url' => 'Please enter a valid Instagram URL.',
             'facebook_url.url' => 'Please enter a valid Facebook URL.',
             'youtube_url.url' => 'Please enter a valid YouTube URL.',
+            'google_review_url.url' => 'Please enter a valid Google Review URL.',
+            'google_review_qr.image' => 'Please upload a valid image file (JPG, PNG or WEBP).',
+            'google_review_qr.max' => 'QR image size should be under 2 MB.',
+            'instagram_qr.image' => 'Please upload a valid image file (JPG, PNG or WEBP).',
+            'instagram_qr.max' => 'QR image size should be under 2 MB.',
         ]);
 
-        SiteSetting::current()->update($data);
+        $settings = SiteSetting::current();
+
+        foreach (['google_review_qr', 'instagram_qr'] as $field) {
+            if ($request->hasFile($field)) {
+                if ($settings->$field) {
+                    Storage::disk('public')->delete($settings->$field);
+                }
+                $data[$field] = $request->file($field)->store('settings', 'public');
+            } else {
+                unset($data[$field]);
+            }
+        }
+
+        $settings->update($data);
 
         return back()->with('success', 'Social media links updated successfully.');
     }

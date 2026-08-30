@@ -98,6 +98,14 @@ function DealershipIcon(props) {
     );
 }
 
+function AccessoriesIcon(props) {
+    return (
+        <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.1-3.1a4 4 0 0 1-5.3 5.3L6.3 20.7a1.5 1.5 0 0 1-2.1-2.1l9.2-9.2a4 4 0 0 1 5.3-5.3l-3.1 3.1z" />
+        </svg>
+    );
+}
+
 
 const navItems = [
     { label: 'Dashboard', href: dashboard.url(), icon: DashboardIcon },
@@ -106,6 +114,7 @@ const navItems = [
     { label: 'Enquiries', href: '/admin/enquiries', icon: EnquiriesIcon },
     { label: 'Dealership Applications', href: '/admin/dealership-applications', icon: DealershipIcon },
     { label: 'Videos', href: '/admin/videos', icon: VideosIcon },
+    { label: 'Accessories', href: '/admin/accessories', icon: AccessoriesIcon },
 
     { label: 'Settings', href: '/admin/settings', icon: SettingsIcon },
     

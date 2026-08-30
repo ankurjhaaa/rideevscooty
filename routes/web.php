@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccessoryController;
 use App\Http\Controllers\DealershipController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ScooterController;
@@ -19,6 +20,8 @@ Route::inertia('/dealership', 'Contact')->name('dealership');
 Route::post('/dealership', [DealershipController::class, 'store'])->name('dealership.store');
 Route::inertia('/contact', 'ContactUs')->name('contact');
 Route::get('/videos', [VideoController::class, 'index'])->name('videos.index');
+Route::get('/accessories', [AccessoryController::class, 'index'])->name('accessories.index');
+Route::get('/accessories/{accessory}', [AccessoryController::class, 'show'])->name('accessories.show');
 Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
 
 require __DIR__.'/admin.php';
