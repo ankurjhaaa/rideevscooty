@@ -178,7 +178,7 @@ export default function PublicLayout({ children, hideToaster = false }) {
                                     {/* Left Column: Categories */}
                                     <div className="w-1/4 pr-8 border-r border-zinc-800">
                                         <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-6">Categories</p>
-                                        <div className="flex flex-col gap-4">
+                                        <div className="flex flex-col gap-4 max-h-[50vh] overflow-y-auto thin-scrollbar pr-2">
                                             {categories.map(cat => (
                                                 <button
                                                     key={`cat-${cat.id}`}
@@ -197,7 +197,7 @@ export default function PublicLayout({ children, hideToaster = false }) {
                                     {/* Middle Column: Products */}
                                     <div className="w-1/4 px-8 border-r border-zinc-800">
                                         <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-6">Models</p>
-                                        <div className="flex flex-col gap-4">
+                                        <div className="flex flex-col gap-4 max-h-[50vh] overflow-y-auto thin-scrollbar pr-2">
                                             {hoveredCategory?.products?.map(prod => (
                                                 <button
                                                     key={`prod-${prod.id}`}
@@ -218,7 +218,9 @@ export default function PublicLayout({ children, hideToaster = false }) {
                                         {hoveredProduct ? (
                                             <>
                                                 <div className="flex-1 pr-8">
-                                                    <h4 className="text-4xl font-medium tracking-tight mb-4">{hoveredProduct.name}</h4>
+                                                    <Link href={`/scooters/${hoveredProduct.slug}`} onClick={() => setIsMegaMenuOpen(false)}>
+                                                        <h4 className="text-4xl font-medium tracking-tight mb-4 hover:text-zinc-300 transition-colors">{hoveredProduct.name}</h4>
+                                                    </Link>
                                                     <p className="text-sm text-zinc-400 mb-8 max-w-sm font-light leading-relaxed line-clamp-2">
                                                         {hoveredProduct.description || 'Experience the ultimate performance and zero emissions.'}
                                                     </p>
@@ -244,15 +246,20 @@ export default function PublicLayout({ children, hideToaster = false }) {
                                                 </div>
                                                 <div className="w-1/2 flex items-center justify-center">
                                                     {hoveredProduct.images?.length > 0 ? (
-                                                        <motion.img
+                                                        <motion.div
                                                             key={`img-${hoveredProduct.id}`}
                                                             initial={{ opacity: 0, scale: 0.95 }}
                                                             animate={{ opacity: 1, scale: 1 }}
                                                             transition={{ duration: 0.4 }}
-                                                            src={hoveredProduct.images.find(i => i.is_primary)?.image_url || hoveredProduct.images[0].image_url}
-                                                            className="w-full h-auto max-h-[300px] object-contain drop-shadow-2xl"
-                                                            alt={hoveredProduct.name}
-                                                        />
+                                                        >
+                                                            <Link href={`/scooters/${hoveredProduct.slug}`} onClick={() => setIsMegaMenuOpen(false)} className="block relative z-10 w-full h-full flex items-center justify-center">
+                                                                <img
+                                                                    src={hoveredProduct.images?.find(i => i.is_primary)?.image_url ?? hoveredProduct.images?.[0]?.image_url}
+                                                                    className="w-full max-h-[300px] object-contain drop-shadow-[0_20px_50px_rgba(255,255,255,0.1)] hover:scale-105 transition-transform duration-700 cursor-pointer"
+                                                                    alt={hoveredProduct.name}
+                                                                />
+                                                            </Link>
+                                                        </motion.div>
                                                     ) : (
                                                         <div className="w-full h-40 bg-zinc-800/50 flex items-center justify-center text-xs text-zinc-500 border border-dashed border-zinc-700">No Image</div>
                                                     )}

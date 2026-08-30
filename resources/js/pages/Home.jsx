@@ -78,9 +78,11 @@ function HeroCarousel({ products, onScrollDown }) {
                                 </div>
 
                                 {/* Product Title */}
-                                <h1 className="text-4xl sm:text-5xl lg:text-[4.5rem] font-medium tracking-tight text-white leading-[1.05] mb-4 lg:mb-6 line-clamp-2 w-full">
-                                    {activeProduct.name}
-                                </h1>
+                                <Link href={`/scooters/${activeProduct.slug}`}>
+                                    <h1 className="text-4xl sm:text-5xl lg:text-[4.5rem] font-medium tracking-tight text-white leading-[1.05] mb-4 lg:mb-6 line-clamp-2 w-full hover:text-zinc-300 transition-colors">
+                                        {activeProduct.name}
+                                    </h1>
+                                </Link>
 
                                 <p className="text-lg lg:text-xl text-zinc-400 font-light mb-6 lg:mb-10 max-w-md">
                                     Starting at ₹{Number(activeProduct.price).toLocaleString('en-IN')}
@@ -141,11 +143,13 @@ function HeroCarousel({ products, onScrollDown }) {
                                             </h2>
                                         </div>
                                         {/* Massive image scaling to fill space */}
-                                        <img
-                                            src={image.image_url}
-                                            className="w-auto h-full max-h-[100%] max-w-[100%] lg:w-[90%] lg:max-w-[800px] object-contain relative z-10 drop-shadow-[0_20px_50px_rgba(255,255,255,0.05)]"
-                                            alt={activeProduct.name}
-                                        />
+                                        <Link href={`/scooters/${activeProduct.slug}`} className="relative z-10 flex items-center justify-center h-full">
+                                            <img
+                                                src={image.image_url}
+                                                className="w-auto h-full max-h-[100%] max-w-[100%] lg:w-[90%] lg:max-w-[800px] object-contain drop-shadow-[0_20px_50px_rgba(255,255,255,0.05)] hover:scale-105 transition-transform duration-700 cursor-pointer"
+                                                alt={activeProduct.name}
+                                            />
+                                        </Link>
                                     </>
                                 ) : (
                                     <span className="text-zinc-600 uppercase tracking-widest text-sm border border-zinc-800 rounded-full px-6 py-3">No Image</span>
@@ -267,9 +271,11 @@ function FullScreenProduct({ product, index, setActiveIndex, isFirst }) {
                             className="w-full"
                         >
                             {/* Product Title */}
-                            <h3 className="text-4xl sm:text-5xl md:text-5xl xl:text-6xl font-medium text-white mb-4 lg:mb-6 leading-[1.05] tracking-tight line-clamp-2 w-full">
-                                {product.name}
-                            </h3>
+                            <Link href={`/scooters/${product.slug}`}>
+                                <h3 className="text-4xl sm:text-5xl md:text-5xl xl:text-6xl font-medium text-white mb-4 lg:mb-6 leading-[1.05] tracking-tight line-clamp-2 w-full hover:text-zinc-300 transition-colors">
+                                    {product.name}
+                                </h3>
+                            </Link>
 
                             <p className="text-lg lg:text-xl text-zinc-400 font-light mb-6 lg:mb-10 max-w-md">
                                 Starting at ₹{Number(product.price).toLocaleString('en-IN')}
@@ -308,11 +314,13 @@ function FullScreenProduct({ product, index, setActiveIndex, isFirst }) {
                             className="w-full h-full flex flex-col items-center justify-center relative"
                         >
                             {image ? (
-                                <img
-                                    src={image.image_url}
-                                    alt={product.name}
-                                    className="w-auto h-full max-h-[100%] max-w-[100%] lg:w-[90%] lg:max-h-[60vh] object-contain relative z-10 drop-shadow-[0_20px_50px_rgba(255,255,255,0.05)]"
-                                />
+                                <Link href={`/scooters/${product.slug}`} className="w-full h-full flex justify-center items-center relative z-10">
+                                    <img
+                                        src={image.image_url}
+                                        alt={product.name}
+                                        className="w-auto h-full max-h-[100%] max-w-[100%] lg:w-[90%] lg:max-h-[60vh] object-contain drop-shadow-[0_20px_50px_rgba(255,255,255,0.05)] hover:scale-105 transition-transform duration-700 cursor-pointer"
+                                    />
+                                </Link>
                             ) : (
                                 <span className="text-zinc-600 font-light tracking-widest uppercase flex h-full items-center justify-center relative z-10">Render Pending</span>
                             )}
