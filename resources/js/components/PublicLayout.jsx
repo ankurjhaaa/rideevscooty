@@ -493,6 +493,16 @@ export default function PublicLayout({ children, hideToaster = false }) {
                                         <svg className="w-5 h-5" fill="#FF0000" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
                                     </a>
                                 )}
+                                {settings.google_review_url && (
+                                    <a href={settings.google_review_url} target="_blank" rel="noopener noreferrer" className="w-11 h-11 rounded-full border border-zinc-800 flex items-center justify-center hover:border-zinc-500/50 hover:bg-white/5 hover:scale-110 transition-all" aria-label="Google Reviews">
+                                        <svg className="w-5 h-5" viewBox="0 0 24 24">
+                                            <path fill="#4285F4" d="M23.52 12.27c0-.85-.08-1.67-.22-2.45H12v4.63h6.47a5.54 5.54 0 0 1-2.4 3.63v3h3.87c2.27-2.09 3.58-5.17 3.58-8.81Z" />
+                                            <path fill="#34A853" d="M12 24c3.24 0 5.96-1.07 7.94-2.92l-3.87-3c-1.08.72-2.45 1.15-4.07 1.15-3.13 0-5.78-2.11-6.73-4.96H1.27v3.09A11.997 11.997 0 0 0 12 24Z" />
+                                            <path fill="#FBBC05" d="M5.27 14.27a7.2 7.2 0 0 1 0-4.54v-3.1H1.27a12 12 0 0 0 0 10.73l4-3.09Z" />
+                                            <path fill="#EA4335" d="M12 4.77c1.77 0 3.35.61 4.6 1.8l3.43-3.43C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.69 1.27 6.63l4 3.1c.95-2.85 3.6-4.96 6.73-4.96Z" />
+                                        </svg>
+                                    </a>
+                                )}
                             </div>
 
                             {/* QR Codes: Scan to Follow / Review */}
