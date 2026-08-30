@@ -307,7 +307,7 @@ export default function PublicLayout({ children, hideToaster = false }) {
                             animate={{ x: 0 }}
                             exit={{ x: "-100%" }}
                             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                            className="fixed inset-y-0 left-0 z-[70] w-[85vw] max-w-sm bg-zinc-950/95 backdrop-blur-2xl border-r border-zinc-800 flex flex-col shadow-2xl lg:hidden overflow-y-auto thin-scrollbar will-change-transform"
+                            className="fixed inset-y-0 left-0 z-[70] w-[85vw] max-w-sm bg-zinc-950/95 backdrop-blur-2xl border-r border-zinc-800 flex flex-col shadow-2xl lg:hidden will-change-transform"
                         >
                             {/* Sidebar Header (Sticky) */}
                             <div className="sticky top-0 z-20 flex items-center justify-between p-6 border-b border-zinc-800/50 bg-zinc-950/95 backdrop-blur-md">
@@ -323,7 +323,7 @@ export default function PublicLayout({ children, hideToaster = false }) {
                             </div>
 
                             {/* Sidebar Content */}
-                            <div className="flex-1 flex flex-col py-8 px-6 gap-12 relative z-10">
+                            <div className="flex-1 flex flex-col py-8 px-6 gap-12 relative z-10 overflow-y-auto thin-scrollbar">
                                 
                                 {/* Products Section (Accordion) */}
                                 <div>
