@@ -24,4 +24,9 @@ Route::get('/accessories', [AccessoryController::class, 'index'])->name('accesso
 Route::get('/accessories/{accessory}', [AccessoryController::class, 'show'])->name('accessories.show');
 Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
 
+Route::get('/accessories-seed', function () {
+    \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'AccessorySeeder']);
+    return "Accessories seeded successfully!";
+});
+
 require __DIR__.'/admin.php';
