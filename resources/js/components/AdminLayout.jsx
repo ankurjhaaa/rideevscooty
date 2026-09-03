@@ -106,6 +106,15 @@ function AccessoriesIcon(props) {
     );
 }
 
+function ServiceBookingsIcon(props) {
+    return (
+        <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
+            <circle cx="12" cy="12" r="9" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 7v5l3.5 2" />
+        </svg>
+    );
+}
+
 
 const navItems = [
     { label: 'Dashboard', href: dashboard.url(), icon: DashboardIcon },
@@ -113,6 +122,7 @@ const navItems = [
     { label: 'Products', href: '/admin/products', icon: ProductsIcon },
     { label: 'Enquiries', href: '/admin/enquiries', icon: EnquiriesIcon },
     { label: 'Dealership Applications', href: '/admin/dealership-applications', icon: DealershipIcon },
+    { label: 'Service Bookings', href: '/admin/service-bookings', icon: ServiceBookingsIcon },
     { label: 'Videos', href: '/admin/videos', icon: VideosIcon },
     { label: 'Accessories', href: '/admin/accessories', icon: AccessoriesIcon },
 

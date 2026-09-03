@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\EnquiryController;
 use App\Http\Controllers\Admin\ProductColorController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProductImageController;
+use App\Http\Controllers\Admin\ServiceBookingController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Admin\VideoController;
@@ -44,6 +45,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::patch('enquiries/{enquiry}/status', [EnquiryController::class, 'updateStatus'])->name('enquiries.status');
         Route::get('dealership-applications', [DealershipApplicationController::class, 'index'])->name('dealership-applications.index');
         Route::patch('dealership-applications/{dealershipApplication}/status', [DealershipApplicationController::class, 'updateStatus'])->name('dealership-applications.status');
+        Route::get('service-bookings', [ServiceBookingController::class, 'index'])->name('service-bookings.index');
+        Route::patch('service-bookings/{serviceBooking}/status', [ServiceBookingController::class, 'updateStatus'])->name('service-bookings.status');
 
         Route::get('settings', [SettingController::class, 'edit'])->name('settings.edit');
         Route::put('settings/website', [SettingController::class, 'updateWebsite'])->name('settings.website');

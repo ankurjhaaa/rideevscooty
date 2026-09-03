@@ -4,6 +4,7 @@ use App\Http\Controllers\AccessoryController;
 use App\Http\Controllers\DealershipController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ScooterController;
+use App\Http\Controllers\ServiceBookingController;
 use App\Http\Controllers\TestRideController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VideoController;
@@ -14,6 +15,8 @@ Route::get('/scooters', [ScooterController::class, 'index'])->name('scooters.ind
 Route::get('/scooters/{product}', [ScooterController::class, 'show'])->name('scooters.show');
 Route::get('/book-a-test-ride', [TestRideController::class, 'create'])->name('test-ride.create');
 Route::post('/book-a-test-ride', [TestRideController::class, 'store'])->name('test-ride.store');
+Route::get('/book-a-service', [ServiceBookingController::class, 'create'])->name('service.create');
+Route::post('/book-a-service', [ServiceBookingController::class, 'store'])->name('service.store');
 
 Route::inertia('/about', 'About')->name('about');
 Route::inertia('/dealership', 'Contact')->name('dealership');

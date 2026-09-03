@@ -86,6 +86,7 @@ export default function PublicLayout({ children, hideToaster = false }) {
         { name: 'About', href: '/about' },
         { name: 'Videos', href: '/videos' },
         { name: 'Accessories', href: '/accessories' },
+        { name: 'Service', href: '/book-a-service' },
         { name: 'Dealership', href: '/dealership' },
         { name: 'Contact', href: '/contact' },
     ];
